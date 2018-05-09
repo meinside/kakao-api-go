@@ -1,4 +1,4 @@
-# Kakao API wrapper for Golang
+# Kakao REST API wrapper for Golang
 
 This is a wrapper library for [Kakao API](https://developers.kakao.com/docs) written in Golang.
 
