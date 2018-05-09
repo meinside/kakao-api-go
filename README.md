@@ -31,6 +31,8 @@ func main() {
 }
 ```
 
+See the [samples here](https://github.com/meinside/kakao-api-go/tree/master/samples).
+
 ## API coverages
 
 - [ ] [UserManagement](https://developers.kakao.com/docs/restapi/user-management)
