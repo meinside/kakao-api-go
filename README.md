@@ -42,7 +42,7 @@ See the [samples here](https://github.com/meinside/kakao-api-go/tree/master/samp
 - [ ] [PushNotification](https://developers.kakao.com/docs/restapi/push-notification)
 - [ ] [Search](https://developers.kakao.com/docs/restapi/search)
 - [ ] [Local](https://developers.kakao.com/docs/restapi/local)
-- [v] [Vision](https://developers.kakao.com/docs/restapi/vision), last update: 2018.05.
+- [X] [Vision](https://developers.kakao.com/docs/restapi/vision), last update: 2018.05.
 
 ## License
 
