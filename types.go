@@ -53,6 +53,22 @@ func newFileParamFromFilepath(path string) (fileParam, error) {
 // Point type
 type Point []float64 // float64 array with length=2
 
+// X returns `x` from this Point
+func (p Point) X() float64 {
+	if len(p) > 0 {
+		return p[0]
+	}
+	return 0
+}
+
+// Y returns `y` from this Point
+func (p Point) Y() float64 {
+	if len(p) > 1 {
+		return p[1]
+	}
+	return 0
+}
+
 ///////////////////////////////
 // structs for vision API
 //
