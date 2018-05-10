@@ -9,7 +9,7 @@ import (
 )
 
 const (
-	apiKey = "0123456789abcdefghijklmnopqrstuvwxyz" // XXX - change this to yours
+	apiKey = "0123456789abcdefghijklmnopqrstuvwxyz" // XXX - change this to your REST API key
 
 	facesFilepath = "./faces.jpg"
 	nsfwFilepath  = "./nsfw.jpg"

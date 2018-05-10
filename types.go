@@ -5,8 +5,15 @@ import (
 )
 
 ///////////////////////////////
-// structs for HTTP
+// types, structs, and functions for HTTP
 //
+
+type authType string
+
+const (
+	authTypeBearer  authType = "Bearer"
+	authTypeKakaoAK authType = "KakaoAK"
+)
 
 // struct for HTTp response
 type httpResponse struct {
@@ -49,6 +56,12 @@ type Point []float64 // float64 array with length=2
 ///////////////////////////////
 // structs for vision API
 //
+
+// ResponseError is the struct for vision API error responses
+type ResponseError struct {
+	Message string `json:"msg"`
+	Code    int    `json:"code"`
+}
 
 // ResponseDetectedFace struct
 //

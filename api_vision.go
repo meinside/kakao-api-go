@@ -17,7 +17,7 @@ func (c *Client) DetectFaceFromFilepath(path string, threshold float32) (Respons
 
 	if err == nil {
 		var bytes []byte
-		bytes, err = c.post(APIBaseURL+"/v1/vision/face/detect", nil, map[string]interface{}{
+		bytes, err = c.post(APIBaseURL+"/v1/vision/face/detect", authTypeKakaoAK, nil, map[string]interface{}{
 			"file":      file,
 			"threshold": threshold,
 		})
@@ -40,7 +40,7 @@ func (c *Client) DetectFaceFromFilepath(path string, threshold float32) (Respons
 //
 // https://developers.kakao.com/docs/restapi/vision#얼굴-검출
 func (c *Client) DetectFaceFromURL(url string, threshold float32) (ResponseDetectedFace, error) {
-	bytes, err := c.post(APIBaseURL+"/v1/vision/face/detect", nil, map[string]interface{}{
+	bytes, err := c.post(APIBaseURL+"/v1/vision/face/detect", authTypeKakaoAK, nil, map[string]interface{}{
 		"image_url": url,
 		"threshold": threshold,
 	})
@@ -66,7 +66,7 @@ func (c *Client) DetectProductFromFilepath(path string, threshold float32) (Resp
 
 	if err == nil {
 		var bytes []byte
-		bytes, err = c.post(APIBaseURL+"/v1/vision/product/detect", nil, map[string]interface{}{
+		bytes, err = c.post(APIBaseURL+"/v1/vision/product/detect", authTypeKakaoAK, nil, map[string]interface{}{
 			"file":      file,
 			"threshold": threshold,
 		})
@@ -89,7 +89,7 @@ func (c *Client) DetectProductFromFilepath(path string, threshold float32) (Resp
 //
 // https://developers.kakao.com/docs/restapi/vision#상품-검출
 func (c *Client) DetectProductFromURL(url string, threshold float32) (ResponseDetectedProduct, error) {
-	bytes, err := c.post(APIBaseURL+"/v1/vision/product/detect", nil, map[string]interface{}{
+	bytes, err := c.post(APIBaseURL+"/v1/vision/product/detect", authTypeKakaoAK, nil, map[string]interface{}{
 		"image_url": url,
 		"threshold": threshold,
 	})
@@ -115,7 +115,7 @@ func (c *Client) CropThumbnailFromFilepath(path string, width, height int) (Resp
 
 	if err == nil {
 		var bytes []byte
-		bytes, err = c.post(APIBaseURL+"/v1/vision/thumbnail/crop", nil, map[string]interface{}{
+		bytes, err = c.post(APIBaseURL+"/v1/vision/thumbnail/crop", authTypeKakaoAK, nil, map[string]interface{}{
 			"file":   file,
 			"width":  width,
 			"height": height,
@@ -140,7 +140,7 @@ func (c *Client) CropThumbnailFromFilepath(path string, width, height int) (Resp
 // https://developers.kakao.com/docs/restapi/vision#썸네일-생성
 func (c *Client) CropThumbnailFromURL(url string, width, height int) (ResponseCroppedThumbnail, error) {
 	var bytes []byte
-	bytes, err := c.post(APIBaseURL+"/v1/vision/thumbnail/crop", nil, map[string]interface{}{
+	bytes, err := c.post(APIBaseURL+"/v1/vision/thumbnail/crop", authTypeKakaoAK, nil, map[string]interface{}{
 		"image_url": url,
 		"width":     width,
 		"height":    height,
@@ -167,7 +167,7 @@ func (c *Client) SuggestThumbnailFromFilepath(path string, width, height int) (R
 
 	if err == nil {
 		var bytes []byte
-		bytes, err = c.post(APIBaseURL+"/v1/vision/thumbnail/detect", nil, map[string]interface{}{
+		bytes, err = c.post(APIBaseURL+"/v1/vision/thumbnail/detect", authTypeKakaoAK, nil, map[string]interface{}{
 			"file":   file,
 			"width":  width,
 			"height": height,
@@ -191,7 +191,7 @@ func (c *Client) SuggestThumbnailFromFilepath(path string, width, height int) (R
 //
 // https://developers.kakao.com/docs/restapi/vision#썸네일-검출
 func (c *Client) SuggestThumbnailFromURL(url string, width, height int) (ResponseSuggestedThumbnail, error) {
-	bytes, err := c.post(APIBaseURL+"/v1/vision/thumbnail/detect", nil, map[string]interface{}{
+	bytes, err := c.post(APIBaseURL+"/v1/vision/thumbnail/detect", authTypeKakaoAK, nil, map[string]interface{}{
 		"image_url": url,
 		"width":     width,
 		"height":    height,
@@ -218,7 +218,7 @@ func (c *Client) GenerateTagsFromFilepath(path string) (ResponseGeneratedTags, e
 
 	if err == nil {
 		var bytes []byte
-		bytes, err = c.post(APIBaseURL+"/v1/vision/multitag/generate", nil, map[string]interface{}{
+		bytes, err = c.post(APIBaseURL+"/v1/vision/multitag/generate", authTypeKakaoAK, nil, map[string]interface{}{
 			"file": file,
 		})
 
@@ -240,7 +240,7 @@ func (c *Client) GenerateTagsFromFilepath(path string) (ResponseGeneratedTags, e
 //
 // https://developers.kakao.com/docs/restapi/vision#멀티태그-생성
 func (c *Client) GenerateTagsFromURL(url string) (ResponseGeneratedTags, error) {
-	bytes, err := c.post(APIBaseURL+"/v1/vision/multitag/generate", nil, map[string]interface{}{
+	bytes, err := c.post(APIBaseURL+"/v1/vision/multitag/generate", authTypeKakaoAK, nil, map[string]interface{}{
 		"image_url": url,
 	})
 
@@ -265,7 +265,7 @@ func (c *Client) DetectNSFWFromFilepath(path string) (ResponseDetectedNSFW, erro
 
 	if err == nil {
 		var bytes []byte
-		bytes, err = c.post(APIBaseURL+"/v1/vision/adult/detect", nil, map[string]interface{}{
+		bytes, err = c.post(APIBaseURL+"/v1/vision/adult/detect", authTypeKakaoAK, nil, map[string]interface{}{
 			"file": file,
 		})
 
@@ -287,7 +287,7 @@ func (c *Client) DetectNSFWFromFilepath(path string) (ResponseDetectedNSFW, erro
 //
 // https://developers.kakao.com/docs/restapi/vision#성인-이미지-판별
 func (c *Client) DetectNSFWFromURL(url string) (ResponseDetectedNSFW, error) {
-	bytes, err := c.post(APIBaseURL+"/v1/vision/adult/detect", nil, map[string]interface{}{
+	bytes, err := c.post(APIBaseURL+"/v1/vision/adult/detect", authTypeKakaoAK, nil, map[string]interface{}{
 		"image_url": url,
 	})
 

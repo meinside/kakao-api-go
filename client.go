@@ -2,6 +2,7 @@ package kakaoapi
 
 import (
 	"bytes"
+	"encoding/json"
 	"fmt"
 	"io"
 	"io/ioutil"
@@ -38,7 +39,7 @@ func NewClient(apiKey string) *Client {
 // HTTP functions
 
 // HTTP GET
-func (c *Client) get(apiURL string, headers map[string]string, params map[string]interface{}) ([]byte, error) {
+func (c *Client) get(apiURL string, authType authType, headers map[string]string, params map[string]interface{}) ([]byte, error) {
 	httpClient := &http.Client{}
 
 	var err error
@@ -48,7 +49,7 @@ func (c *Client) get(apiURL string, headers map[string]string, params map[string
 		for k, v := range headers {
 			req.Header.Set(k, v)
 		}
-		req.Header.Set("Authorization", c.authHeader()) // set auth header
+		req.Header.Set("Authorization", c.authHeader(authType)) // set auth header
 
 		// set parameters
 		queries := req.URL.Query()
@@ -64,7 +65,7 @@ func (c *Client) get(apiURL string, headers map[string]string, params map[string
 }
 
 // HTTP POST
-func (c *Client) post(apiURL string, headers map[string]string, params map[string]interface{}) ([]byte, error) {
+func (c *Client) post(apiURL string, authType authType, headers map[string]string, params map[string]interface{}) ([]byte, error) {
 	httpClient := &http.Client{}
 
 	var err error
@@ -104,7 +105,7 @@ func (c *Client) post(apiURL string, headers map[string]string, params map[strin
 				req.Header.Set(k, v)
 			}
 			req.Header.Set("Content-Type", writer.FormDataContentType())
-			req.Header.Set("Authorization", c.authHeader()) // set auth header
+			req.Header.Set("Authorization", c.authHeader(authType)) // set auth header
 
 			return c.fetchHTTPResponse(httpClient, req)
 		}
@@ -124,7 +125,7 @@ func (c *Client) post(apiURL string, headers map[string]string, params map[strin
 				req.Header.Set(k, v)
 			}
 			req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
-			req.Header.Set("Authorization", c.authHeader()) // set auth header
+			req.Header.Set("Authorization", c.authHeader(authType)) // set auth header
 
 			return c.fetchHTTPResponse(httpClient, req)
 		}
@@ -170,6 +171,11 @@ func (c *Client) fetchHTTPResponse(httpClient *http.Client, req *http.Request) (
 				return bytes, nil
 			}
 
+			var errResponse ResponseError
+			if err := json.Unmarshal(bytes, &errResponse); err == nil {
+				return bytes, fmt.Errorf("API error with response code: %d, message: %s", errResponse.Code, errResponse.Message)
+			}
+
 			return bytes, fmt.Errorf("HTTP status %d %s", resp.StatusCode, string(bytes))
 		} else if c.Verbose {
 			// verbose message for debugging
@@ -187,8 +193,8 @@ func (c *Client) fetchHTTPResponse(httpClient *http.Client, req *http.Request) (
 	return []byte{}, err
 }
 
-func (c *Client) authHeader() string {
-	return fmt.Sprintf("KakaoAK %s", c.apiKey)
+func (c *Client) authHeader(method authType) string {
+	return fmt.Sprintf("%s %s", method, c.apiKey)
 }
 
 // checks if given `params` has any fileParam in it
