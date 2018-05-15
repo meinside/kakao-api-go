@@ -79,11 +79,11 @@ func (c *Client) post(apiURL string, authType authType, headers map[string]strin
 		for key, value := range params {
 			switch value.(type) {
 			case fileParam:
-				fileParam, _ := value.(fileParam)
-				filename := fmt.Sprintf("%s.%s", key, getExtension(fileParam.bytes))
+				file, _ := value.(fileParam)
+				filename := fmt.Sprintf("%s.%s", key, getExtension(file.bytes))
 
 				if part, err := writer.CreateFormFile(key, filename); err == nil {
-					if _, err := io.Copy(part, bytes.NewReader(fileParam.bytes)); err != nil {
+					if _, err := io.Copy(part, bytes.NewReader(file.bytes)); err != nil {
 						log.Printf("* Could not write bytes to multipart for param '%s': %s", key, err)
 					}
 				} else {
