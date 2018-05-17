@@ -149,9 +149,11 @@ func (c *Client) fetchHTTPResponse(httpClient *http.Client, req *http.Request) (
 	}
 
 	var resp *http.Response
-	if resp, err = httpClient.Do(req); err == nil {
+	resp, err = httpClient.Do(req)
+	if resp != nil {
 		defer resp.Body.Close()
-
+	}
+	if err == nil {
 		// verbose message for debugging
 		if c.Verbose {
 			if dumped, err := httputil.DumpResponse(resp, true); err == nil {
