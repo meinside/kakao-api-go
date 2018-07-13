@@ -175,3 +175,10 @@ type ResponseDetectedNSFW struct {
 		Adult  float64 `json:"adult"`
 	} `json:"result"`
 }
+
+// ResponseTranslatedText struct
+//
+// https://developers.kakao.com/docs/restapi/translation#문장번역
+type ResponseTranslatedText struct {
+	Phrases [][]string `json:"translated_text"`
+}
