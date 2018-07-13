@@ -19,17 +19,17 @@ func main() {
 	//client.Verbose = true
 
 	// translate text
-	if translated, err := client.TranslateText(koreanText, kakaoapi.Korean, kakaoapi.English); err == nil {
+	if translated, err := client.TranslateText(koreanText, kakaoapi.LanguageKorean, kakaoapi.LanguageEnglish); err == nil {
 		log.Printf("Translated: %s", prettify(translated))
 	} else {
 		log.Printf("Failed to translate text: %s", err)
 	}
-	if translated, err := client.TranslateText(koreanText, kakaoapi.Korean, kakaoapi.Chinese); err == nil {
+	if translated, err := client.TranslateText(koreanText, kakaoapi.LanguageKorean, kakaoapi.LanguageChinese); err == nil {
 		log.Printf("Translated: %s", prettify(translated))
 	} else {
 		log.Printf("Failed to translate text: %s", err)
 	}
-	if translated, err := client.TranslateText(koreanText, kakaoapi.Korean, kakaoapi.Japanese); err == nil {
+	if translated, err := client.TranslateText(koreanText, kakaoapi.LanguageKorean, kakaoapi.LanguageJapanese); err == nil {
 		log.Printf("Translated: %s", prettify(translated))
 	} else {
 		log.Printf("Failed to translate text: %s", err)

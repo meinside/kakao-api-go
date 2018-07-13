@@ -14,10 +14,11 @@ type TypeLanguage string
 
 // Language types
 const (
-	Korean   TypeLanguage = "kr"
-	English  TypeLanguage = "en"
-	Japanese TypeLanguage = "jp"
-	Chinese  TypeLanguage = "cn"
+	LanguageKorean   TypeLanguage = "kr"
+	LanguageEnglish  TypeLanguage = "en"
+	LanguageJapanese TypeLanguage = "jp"
+	LanguageChinese  TypeLanguage = "cn"
+	LanguageInvalid  TypeLanguage = "_"
 )
 
 // TranslateText translates given text
