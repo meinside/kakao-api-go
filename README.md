@@ -43,6 +43,7 @@ See the [samples here](https://github.com/meinside/kakao-api-go/tree/master/samp
 - [ ] [Search](https://developers.kakao.com/docs/restapi/search)
 - [ ] [Local](https://developers.kakao.com/docs/restapi/local)
 - [X] [Vision](https://developers.kakao.com/docs/restapi/vision), last update: 2018.05.
+- [X] [Trnaslation](https://developers.kakao.com/docs/restapi/translation), last update: 2018.07.
 
 ## License
 
