@@ -5,7 +5,7 @@ This is a wrapper library for [Kakao API](https://developers.kakao.com/docs) wri
 ## How to get
 
 ```bash
-$ go get github.com/meinside/kakao-api-go
+$ go get -u github.com/meinside/kakao-api-go
 ```
 
 ## How to use
@@ -43,7 +43,7 @@ See the [samples here](https://github.com/meinside/kakao-api-go/tree/master/samp
 - [ ] [Search](https://developers.kakao.com/docs/restapi/search)
 - [ ] [Local](https://developers.kakao.com/docs/restapi/local)
 - [X] [Vision](https://developers.kakao.com/docs/restapi/vision), last update: 2018.05.
-- [X] [Trnaslation](https://developers.kakao.com/docs/restapi/translation), last update: 2018.07.
+- [X] [Translation](https://developers.kakao.com/docs/restapi/translation), last update: 2018.07.
 
 ## License
 
