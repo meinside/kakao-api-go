@@ -8,6 +8,7 @@ import (
 	"io/ioutil"
 	"log"
 	"mime/multipart"
+	"net"
 	"net/http"
 	"net/http/httputil"
 	"net/url"
@@ -20,8 +21,6 @@ import (
 // Constants
 const (
 	APIBaseURL = "https://kapi.kakao.com"
-
-	TimeoutSeconds = 10
 )
 
 // Client struct
@@ -41,10 +40,22 @@ func NewClient(apiKey string) *Client {
 
 // HTTP functions
 
+func defaultTransport() *http.Transport {
+	return &http.Transport{
+		Dial: (&net.Dialer{
+			Timeout:   10 * time.Second,
+			KeepAlive: 10 * time.Second,
+		}).Dial,
+		TLSHandshakeTimeout:   5 * time.Second,
+		ResponseHeaderTimeout: 5 * time.Second,
+		ExpectContinueTimeout: 1 * time.Second,
+	}
+}
+
 // HTTP GET
 func (c *Client) get(apiURL string, authType authType, headers map[string]string, params map[string]interface{}) ([]byte, error) {
 	httpClient := &http.Client{
-		Timeout: TimeoutSeconds * time.Second,
+		Transport: defaultTransport(),
 	}
 
 	var err error
@@ -72,7 +83,7 @@ func (c *Client) get(apiURL string, authType authType, headers map[string]string
 // HTTP POST
 func (c *Client) post(apiURL string, authType authType, headers map[string]string, params map[string]interface{}) ([]byte, error) {
 	httpClient := &http.Client{
-		Timeout: TimeoutSeconds * time.Second,
+		Transport: defaultTransport(),
 	}
 
 	var err error
