@@ -12,6 +12,7 @@ import (
 	"net/http/httputil"
 	"net/url"
 	"strings"
+	"time"
 )
 
 // Created on 2018.05.09.
@@ -19,6 +20,8 @@ import (
 // Constants
 const (
 	APIBaseURL = "https://kapi.kakao.com"
+
+	TimeoutSeconds = 10
 )
 
 // Client struct
@@ -40,7 +43,9 @@ func NewClient(apiKey string) *Client {
 
 // HTTP GET
 func (c *Client) get(apiURL string, authType authType, headers map[string]string, params map[string]interface{}) ([]byte, error) {
-	httpClient := &http.Client{}
+	httpClient := &http.Client{
+		Timeout: TimeoutSeconds * time.Second,
+	}
 
 	var err error
 	var req *http.Request
@@ -66,7 +71,9 @@ func (c *Client) get(apiURL string, authType authType, headers map[string]string
 
 // HTTP POST
 func (c *Client) post(apiURL string, authType authType, headers map[string]string, params map[string]interface{}) ([]byte, error) {
-	httpClient := &http.Client{}
+	httpClient := &http.Client{
+		Timeout: TimeoutSeconds * time.Second,
+	}
 
 	var err error
 
