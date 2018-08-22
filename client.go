@@ -25,7 +25,8 @@ const (
 
 // Client struct
 type Client struct {
-	apiKey string
+	apiKey     string
+	httpClient *http.Client
 
 	Verbose bool // log verbose message or not
 }
@@ -33,32 +34,27 @@ type Client struct {
 // NewClient returns a new API client
 func NewClient(apiKey string) *Client {
 	return &Client{
-		apiKey:  apiKey,
+		apiKey: apiKey,
+		httpClient: &http.Client{
+			Transport: &http.Transport{
+				Dial: (&net.Dialer{
+					Timeout:   10 * time.Second,
+					KeepAlive: 300 * time.Second,
+				}).Dial,
+				IdleConnTimeout:       90 * time.Second,
+				TLSHandshakeTimeout:   10 * time.Second,
+				ResponseHeaderTimeout: 10 * time.Second,
+				ExpectContinueTimeout: 1 * time.Second,
+			},
+		},
 		Verbose: false,
 	}
 }
 
 // HTTP functions
 
-func defaultTransport() *http.Transport {
-	return &http.Transport{
-		Dial: (&net.Dialer{
-			Timeout:   10 * time.Second,
-			KeepAlive: 300 * time.Second,
-		}).Dial,
-		IdleConnTimeout:       90 * time.Second,
-		TLSHandshakeTimeout:   10 * time.Second,
-		ResponseHeaderTimeout: 10 * time.Second,
-		ExpectContinueTimeout: 1 * time.Second,
-	}
-}
-
 // HTTP GET
 func (c *Client) get(apiURL string, authType authType, headers map[string]string, params map[string]interface{}) ([]byte, error) {
-	httpClient := &http.Client{
-		Transport: defaultTransport(),
-	}
-
 	var err error
 	var req *http.Request
 	if req, err = http.NewRequest("GET", apiURL, nil); err == nil {
@@ -75,7 +71,7 @@ func (c *Client) get(apiURL string, authType authType, headers map[string]string
 		}
 		req.URL.RawQuery = queries.Encode()
 
-		return c.fetchHTTPResponse(httpClient, req)
+		return c.fetchHTTPResponse(req)
 	}
 
 	return []byte{}, err
@@ -83,10 +79,6 @@ func (c *Client) get(apiURL string, authType authType, headers map[string]string
 
 // HTTP POST
 func (c *Client) post(apiURL string, authType authType, headers map[string]string, params map[string]interface{}) ([]byte, error) {
-	httpClient := &http.Client{
-		Transport: defaultTransport(),
-	}
-
 	var err error
 
 	if hasFileInParams(params) {
@@ -126,7 +118,7 @@ func (c *Client) post(apiURL string, authType authType, headers map[string]strin
 			req.Header.Set("Content-Type", writer.FormDataContentType())
 			req.Header.Set("Authorization", c.authHeader(authType)) // set auth header
 
-			return c.fetchHTTPResponse(httpClient, req)
+			return c.fetchHTTPResponse(req)
 		}
 	} else {
 		// application/x-www-form-urlencoded
@@ -146,14 +138,14 @@ func (c *Client) post(apiURL string, authType authType, headers map[string]strin
 			req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 			req.Header.Set("Authorization", c.authHeader(authType)) // set auth header
 
-			return c.fetchHTTPResponse(httpClient, req)
+			return c.fetchHTTPResponse(req)
 		}
 	}
 
 	return []byte{}, err
 }
 
-func (c *Client) fetchHTTPResponse(httpClient *http.Client, req *http.Request) (response []byte, err error) {
+func (c *Client) fetchHTTPResponse(req *http.Request) (response []byte, err error) {
 	// verbose message for debugging
 	if c.Verbose {
 		if dumped, err := httputil.DumpRequest(req, true); err == nil {
@@ -168,7 +160,8 @@ func (c *Client) fetchHTTPResponse(httpClient *http.Client, req *http.Request) (
 	}
 
 	var resp *http.Response
-	resp, err = httpClient.Do(req)
+	resp, err = c.httpClient.Do(req)
+
 	if resp != nil {
 		defer resp.Body.Close()
 	}
