@@ -182,3 +182,18 @@ type ResponseDetectedNSFW struct {
 type ResponseTranslatedText struct {
 	Phrases [][]string `json:"translated_text"`
 }
+
+// ResponseSpeechToText struct
+//
+// https://developers.kakao.com/docs/restapi/speech#음성-인식-뉴톤-
+type ResponseSpeechToText struct {
+	Type  string                  `json:"type"`
+	Value string                  `json:"value"`
+	NBest []SpeechToTextCandidate `json:"nBest"`
+}
+
+// SpeechToTextCandidate struct
+type SpeechToTextCandidate struct {
+	Value string `json:"value"`
+	Score int    `json:"score"`
+}
