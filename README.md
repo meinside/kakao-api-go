@@ -44,6 +44,7 @@ See the [samples here](https://github.com/meinside/kakao-api-go/tree/master/samp
 - [ ] [Local](https://developers.kakao.com/docs/restapi/local)
 - [X] [Vision](https://developers.kakao.com/docs/restapi/vision), last update: 2018.05.
 - [X] [Translation](https://developers.kakao.com/docs/restapi/translation), last update: 2018.07.
+- [X] [Speech](https://developers.kakao.com/docs/restapi/speech), last update: 2019.03.
 
 ## License
 

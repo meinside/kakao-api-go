@@ -20,7 +20,8 @@ import (
 
 // Constants
 const (
-	APIBaseURL = "https://kapi.kakao.com"
+	APIBaseURL    = "https://kapi.kakao.com"
+	APINewtoneURL = "https://kakaoi-newtone-openapi.kakao.com"
 )
 
 // Client struct
