@@ -81,7 +81,7 @@ type ResponseError struct {
 
 // ResponseDetectedFace struct
 //
-// https://developers.kakao.com/docs/restapi/vision#얼굴-검출
+// https://developers.kakao.com/docs/latest/ko/vision/dev-guide#recog-face
 type ResponseDetectedFace struct {
 	Result struct {
 		Width  int `json:"width"`
@@ -115,9 +115,20 @@ type ResponseDetectedFace struct {
 	} `json:"result"`
 }
 
+// ResponseDetectedNSFW struct
+//
+// https://developers.kakao.com/docs/latest/ko/vision/dev-guide#recog-adult-content
+type ResponseDetectedNSFW struct {
+	Result struct {
+		Normal float64 `json:"normal"`
+		Soft   float64 `json:"soft"`
+		Adult  float64 `json:"adult"`
+	} `json:"result"`
+}
+
 // ResponseDetectedProduct struct
 //
-// https://developers.kakao.com/docs/restapi/vision#상품-검출
+// https://developers.kakao.com/docs/latest/ko/vision/dev-guide#recog-product
 type ResponseDetectedProduct struct {
 	Result struct {
 		Width   int `json:"width"`
@@ -134,14 +145,14 @@ type ResponseDetectedProduct struct {
 
 // ResponseCroppedThumbnail struct
 //
-// https://developers.kakao.com/docs/restapi/vision#썸네일-생성
+// https://developers.kakao.com/docs/latest/ko/vision/dev-guide#create-thumbnail
 type ResponseCroppedThumbnail struct {
 	ThumbnailImageURL string `json:"thumbnail_image_url"`
 }
 
 // ResponseSuggestedThumbnail struct
 //
-// https://developers.kakao.com/docs/restapi/vision#썸네일-검출
+// https://developers.kakao.com/docs/latest/ko/vision/dev-guide#extract-thumbnail
 type ResponseSuggestedThumbnail struct {
 	Result struct {
 		Width     int `json:"width"`
@@ -157,7 +168,7 @@ type ResponseSuggestedThumbnail struct {
 
 // ResponseGeneratedTags struct
 //
-// https://developers.kakao.com/docs/restapi/vision#멀티태그-생성
+// https://developers.kakao.com/docs/latest/ko/vision/dev-guide#create-multi-tag
 type ResponseGeneratedTags struct {
 	Result struct {
 		Labels       []string `json:"label"`
@@ -165,27 +176,40 @@ type ResponseGeneratedTags struct {
 	} `json:"result"`
 }
 
-// ResponseDetectedNSFW struct
+// DetectedTextBoundPoint type
+type DetectedTextBoundPoint []int // [x, y]
+
+// DetectedTextBounds type
+type DetectedTextBounds []DetectedTextBoundPoint // [left-upper-point, right-upper-point, right-lower-point, left-lower-point]
+
+// ResponseDetectedText struct
 //
-// https://developers.kakao.com/docs/restapi/vision#성인-이미지-판별
-type ResponseDetectedNSFW struct {
+// https://developers.kakao.com/docs/latest/ko/vision/dev-guide#detect-char
+type ResponseDetectedText struct {
 	Result struct {
-		Normal float64 `json:"normal"`
-		Soft   float64 `json:"soft"`
-		Adult  float64 `json:"adult"`
+		Boxes []DetectedTextBounds `json:"boxes"`
+	} `json:"result"`
+}
+
+// ResponseRecognizedText struct
+//
+// https://developers.kakao.com/docs/latest/ko/vision/dev-guide#recog-char
+type ResponseRecognizedText struct {
+	Result struct {
+		RecognizedWords []string `json:"recognition_words"`
 	} `json:"result"`
 }
 
 // ResponseTranslatedText struct
 //
-// https://developers.kakao.com/docs/restapi/translation#문장번역
+// https://developers.kakao.com/docs/latest/ko/translate/dev-guide#trans-sentence
 type ResponseTranslatedText struct {
 	Phrases [][]string `json:"translated_text"`
 }
 
 // ResponseSpeechToText struct
 //
-// https://developers.kakao.com/docs/restapi/speech#음성-인식-뉴톤-
+// https://developers.kakao.com/docs/latest/ko/voice/rest-api#speech-to-text
 type ResponseSpeechToText struct {
 	Type  string                  `json:"type"`
 	Value string                  `json:"value"`
@@ -196,4 +220,122 @@ type ResponseSpeechToText struct {
 type SpeechToTextCandidate struct {
 	Value string `json:"value"`
 	Score int    `json:"score"`
+}
+
+// ResponseAnalyzedPose struct
+//
+// https://developers.kakao.com/docs/latest/ko/pose/dev-guide#image-pose-estimation
+type ResponseAnalyzedPose []AnalyzedPose
+
+// AnalyzedPose struct
+type AnalyzedPose struct {
+	Area          float32   `json:"area"`
+	BoundingBoxes []float32 `json:"bbox"`
+	CategoryID    int       `json:"category_id"` // 1 for Person
+	KeyPoints     []float32 `json:"keypoints"`
+	Score         float32   `json:"score"`
+}
+
+// KeyPointIndex for indexing keypoints
+type KeyPointIndex int
+
+// KeyPointIndex values
+const (
+	KeyPointIndexNose          KeyPointIndex = 0
+	KeyPointIndexLeftEye       KeyPointIndex = 1
+	KeyPointIndexRightEye      KeyPointIndex = 2
+	KeyPointIndexLeftEar       KeyPointIndex = 3
+	KeyPointIndexRightEar      KeyPointIndex = 4
+	KeyPointIndexLeftShoulder  KeyPointIndex = 5
+	KeyPointIndexRightShoulder KeyPointIndex = 6
+	KeyPointIndexLeftElbow     KeyPointIndex = 7
+	KeyPointIndexRightElbow    KeyPointIndex = 8
+	KeyPointIndexLeftWrist     KeyPointIndex = 9
+	KeyPointIndexRightWrist    KeyPointIndex = 10
+	KeyPointIndexLeftHip       KeyPointIndex = 11
+	KeyPointIndexRightHip      KeyPointIndex = 12
+	KeyPointIndexLeftKnee      KeyPointIndex = 13
+	KeyPointIndexRightKnee     KeyPointIndex = 14
+	KeyPointIndexLeftAnkle     KeyPointIndex = 15
+	KeyPointIndexRightAnkle    KeyPointIndex = 16
+)
+
+// KeyPointFor returns a keypoint value for given keypoint index
+func (p AnalyzedPose) KeyPointFor(index KeyPointIndex) (x, y, score float32) {
+	i := int(index)
+	idx1, idx2, idx3 := i*3, i*3+1, i*3+2
+
+	count := len(p.KeyPoints)
+	if idx1 < count && idx2 < count && idx3 < count {
+		x = p.KeyPoints[idx1]
+		y = p.KeyPoints[idx2]
+		score = p.KeyPoints[idx3]
+	}
+
+	return x, y, score
+}
+
+// ResponseAnalyzedPoseFromVideoURLRequested struct
+//
+// https://developers.kakao.com/docs/latest/ko/pose/dev-guide#job-submit
+type ResponseAnalyzedPoseFromVideoURLRequested struct {
+	JobID string `json:"job_id"`
+}
+
+// PoseAnalysisStatus type
+type PoseAnalysisStatus string
+
+// PoseAnalysisStatus constants
+const (
+	PoseAnalysisStatusWaiting    PoseAnalysisStatus = "waiting"
+	PoseAnalysisStatusProcessing PoseAnalysisStatus = "processing"
+	PoseAnalysisStatusSuccess    PoseAnalysisStatus = "success"
+	PoseAnalysisStatusFailed     PoseAnalysisStatus = "failed"
+	PoseAnalysisStatusNotFound   PoseAnalysisStatus = "not found"
+)
+
+// PoseAnnotation struct
+type PoseAnnotation struct {
+	FrameNum int            `json:"frame_num"` // 0 ~ n-1
+	Objects  []AnalyzedPose `json:"objects"`
+}
+
+// KeyPointCategory struct
+type KeyPointCategory struct {
+	ID            int      `json:"id"` // = 1 (for person)
+	KeyPoints     []string `json:"keypoints"`
+	Name          string   `json:"name"` // = "person"
+	Skeleton      [][]int  `json:"skeleton"`
+	SuperCategory string   `json:"supercategory"` // = "person"
+}
+
+// PoseInfo struct
+type PoseInfo struct {
+	Contributor string `json:"contributor"`
+	DateCreated string `json:"date_created"`
+	Description string `json:"description"`
+	URL         string `json:"url"`
+	Version     string `json:"version"`
+	Year        int    `json:"year"`
+}
+
+// PoseVideo struct
+type PoseVideo struct {
+	FPS    float32 `json:"fps"`
+	Frames int     `json:"frames"`
+	Height int     `json:"height"`
+	Width  int     `json:"width"`
+}
+
+// ResponseAnalyzedPoseFromVideoURL struct
+//
+// https://developers.kakao.com/docs/latest/ko/pose/dev-guide#job-retrieval
+type ResponseAnalyzedPoseFromVideoURL struct {
+	Annotations []PoseAnnotation   `json:"annotations,omitempty"` // returns only when `status` == "success"
+	Categories  []KeyPointCategory `json:"categories,omitempty"`  // returns only when `status` == "success"
+	Info        PoseInfo           `json:"info,omitempty"`        // returns only when `status` == "success"
+	JobID       string             `json:"job_id"`
+	Status      PoseAnalysisStatus `json:"status"`
+	Video       PoseVideo          `json:"video,omitempty"`       // returns only when `status` == "success"
+	Description string             `json:"description,omitempty"` // returns only when `status` == "failed"
 }

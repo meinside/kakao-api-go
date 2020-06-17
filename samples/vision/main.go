@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/meinside/kakao-api-go"
+	kakaoapi "github.com/meinside/kakao-api-go"
 )
 
 const (
@@ -13,6 +13,7 @@ const (
 
 	facesFilepath = "./faces.jpg"
 	nsfwFilepath  = "./nsfw.jpg"
+	textFilepath  = "./text.jpg"
 )
 
 func main() {
@@ -24,6 +25,13 @@ func main() {
 		log.Printf("Faces: %s", prettify(faces))
 	} else {
 		log.Printf("Failed to detect faces: %s", err)
+	}
+
+	// detect nsfw
+	if nsfw, err := client.DetectNSFWFromFilepath(nsfwFilepath); err == nil {
+		log.Printf("NSFW: %+v", prettify(nsfw))
+	} else {
+		log.Printf("Failed to detect NSFW: %s", err)
 	}
 
 	// detect products
@@ -54,11 +62,18 @@ func main() {
 		log.Printf("Failed to generate tags: %s", err)
 	}
 
-	// detect nsfw
-	if nsfw, err := client.DetectNSFWFromFilepath(nsfwFilepath); err == nil {
-		log.Printf("NSFW: %+v", prettify(nsfw))
+	// detect text
+	if text, err := client.DetectTextFromFilepath(textFilepath); err == nil {
+		log.Printf("Detected text: %s", prettify(text))
+
+		// and then recognize it
+		if recognized, err := client.RecognizeTextFromFilepath(textFilepath, text.Result.Boxes); err == nil {
+			log.Printf("Recognized text: %s", prettify(recognized))
+		} else {
+			log.Printf("Failed to recognize text: %s", err)
+		}
 	} else {
-		log.Printf("Failed to detect NSFW: %s", err)
+		log.Printf("Failed to detect text: %s", prettify(text))
 	}
 }
 

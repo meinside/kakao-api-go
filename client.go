@@ -22,6 +22,7 @@ import (
 const (
 	APIBaseURL    = "https://kapi.kakao.com"
 	APINewtoneURL = "https://kakaoi-newtone-openapi.kakao.com"
+	APICVURL      = "https://cv-api.kakaobrain.com"
 )
 
 // Client struct
@@ -102,7 +103,11 @@ func (c *Client) post(apiURL string, authType authType, headers map[string]strin
 					log.Printf("* Could not create part for param '%s': %s", key, err)
 				}
 			default:
-				writer.WriteField(key, fmt.Sprintf("%v", value))
+				if bytes, err := json.Marshal(value); err == nil {
+					writer.WriteField(key, string(bytes))
+				} else {
+					writer.WriteField(key, fmt.Sprintf("%v", value))
+				}
 			}
 		}
 
@@ -127,7 +132,11 @@ func (c *Client) post(apiURL string, authType authType, headers map[string]strin
 		// parameters
 		data := url.Values{}
 		for k, v := range params {
-			data.Set(k, fmt.Sprintf("%v", v))
+			if bytes, err := json.Marshal(v); err == nil {
+				data.Set(k, string(bytes))
+			} else {
+				data.Set(k, fmt.Sprintf("%v", v))
+			}
 		}
 
 		var req *http.Request

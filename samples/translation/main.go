@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/meinside/kakao-api-go"
+	kakaoapi "github.com/meinside/kakao-api-go"
 )
 
 const (
