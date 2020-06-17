@@ -15,7 +15,7 @@ $ go get -u github.com/meinside/kakao-api-go
 package main
 
 import (
-	"github.com/meinside/kakao-api-go"
+	kakaoapi "github.com/meinside/kakao-api-go"
 )
 
 const (
@@ -35,16 +35,23 @@ See the [samples here](https://github.com/meinside/kakao-api-go/tree/master/samp
 
 ## API coverages
 
-- [ ] [UserManagement](https://developers.kakao.com/docs/restapi/user-management)
-- [ ] [KakaoTalk](https://developers.kakao.com/docs/restapi/kakaotalk-api)
-- [ ] [KakaoPay](https://developers.kakao.com/docs/restapi/kakaopay-api)
-- [ ] [KakaoStory](https://developers.kakao.com/docs/restapi/kakaostory-api)
-- [ ] [PushNotification](https://developers.kakao.com/docs/restapi/push-notification)
-- [ ] [Search](https://developers.kakao.com/docs/restapi/search)
-- [ ] [Local](https://developers.kakao.com/docs/restapi/local)
-- [X] [Vision](https://developers.kakao.com/docs/restapi/vision), last update: 2018.05.
-- [X] [Translation](https://developers.kakao.com/docs/restapi/translation), last update: 2018.07.
-- [X] [Speech](https://developers.kakao.com/docs/restapi/speech), last update: 2019.03.
+- [ ] [KakaoLogin](https://developers.kakao.com/docs/latest/ko/kakaologin/rest-api)
+- [ ] [UserManagement](https://developers.kakao.com/docs/latest/ko/user-mgmt/rest-api)
+- [ ] [Message](https://developers.kakao.com/docs/latest/ko/message/rest-api)
+- [ ] [KakaoStory](https://developers.kakao.com/docs/latest/ko/kakaostory/rest-api)
+- [ ] [KakaoTalkChannel](https://developers.kakao.com/docs/latest/ko/kakaotalk-channel/common)
+- [ ] [KakaoSync](https://developers.kakao.com/docs/latest/ko/kakaosync/common)
+- [ ] [KakaoPay](https://developers.kakao.com/docs/latest/ko/kakaopay/common)
+- [ ] [KakaoMoment](https://developers.kakao.com/docs/latest/ko/kakaomoment/common)
+- [ ] [PushNotification](https://developers.kakao.com/docs/latest/ko/push/rest-api)
+- [ ] [DaumSearch](https://developers.kakao.com/docs/latest/ko/daum-search/dev-guide)
+- [ ] [Map](https://developers.kakao.com/docs/latest/ko/kakaomap/common)
+- [ ] [Local](https://developers.kakao.com/docs/latest/ko/local/dev-guide)
+- [ ] [KakaoNavi](https://developers.kakao.com/docs/latest/ko/kakaonavi/common)
+- [X] [Vision](https://developers.kakao.com/docs/latest/ko/vision/dev-guide), last update: 2020.06.
+- [X] [Pose](https://developers.kakao.com/docs/latest/ko/pose/dev-guide), last update: 2020.06.
+- [X] [Translation](https://developers.kakao.com/docs/latest/ko/translate/dev-guide), last update: 2020.06.
+- [X] [Speech](https://developers.kakao.com/docs/latest/ko/voice/rest-api), last update: 2020.06.
 
 ## License
 

@@ -7,7 +7,7 @@ import (
 
 // Created on 2018.07.13.
 //
-// Functions for [Translation APIs](https://developers.kakao.com/docs/restapi/translation)
+// Functions for [Translation APIs](https://developers.kakao.com/docs/latest/ko/translate/dev-guide)
 
 // TypeLanguage is a type for language type for translation
 type TypeLanguage string
@@ -25,7 +25,7 @@ const (
 
 // TranslateText translates given text
 //
-// https://developers.kakao.com/docs/restapi/vision#얼굴-검출
+// https://developers.kakao.com/docs/latest/ko/translate/dev-guide#trans-sentence
 func (c *Client) TranslateText(text string, fromLanguage, toLanguage TypeLanguage) (ResponseTranslatedText, error) {
 	var bytes []byte
 	var err error

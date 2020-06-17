@@ -7,11 +7,11 @@ import (
 
 // Created on 2018.05.09.
 //
-// Functions for [Vision APIs](https://developers.kakao.com/docs/restapi/vision)
+// Functions for [Vision APIs](https://developers.kakao.com/docs/latest/ko/vision/dev-guide)
 
 // DetectFaceFromFilepath detects faces from the given filepath of an image
 //
-// https://developers.kakao.com/docs/restapi/vision#얼굴-검출
+// https://developers.kakao.com/docs/latest/ko/vision/dev-guide#recog-face
 func (c *Client) DetectFaceFromFilepath(path string, threshold float32) (ResponseDetectedFace, error) {
 	file, err := newFileParamFromFilepath(path)
 
@@ -38,7 +38,7 @@ func (c *Client) DetectFaceFromFilepath(path string, threshold float32) (Respons
 
 // DetectFaceFromURL detects faces from the given url of an image
 //
-// https://developers.kakao.com/docs/restapi/vision#얼굴-검출
+// https://developers.kakao.com/docs/latest/ko/vision/dev-guide#recog-face
 func (c *Client) DetectFaceFromURL(url string, threshold float32) (ResponseDetectedFace, error) {
 	bytes, err := c.post(APIBaseURL+"/v1/vision/face/detect", authTypeKakaoAK, nil, map[string]interface{}{
 		"image_url": url,
@@ -58,9 +58,56 @@ func (c *Client) DetectFaceFromURL(url string, threshold float32) (ResponseDetec
 	return ResponseDetectedFace{}, err
 }
 
+// DetectNSFWFromFilepath detects NSFW from given image of filepath
+//
+// https://developers.kakao.com/docs/latest/ko/vision/dev-guide#recog-adult-content
+func (c *Client) DetectNSFWFromFilepath(path string) (ResponseDetectedNSFW, error) {
+	file, err := newFileParamFromFilepath(path)
+
+	if err == nil {
+		var bytes []byte
+		bytes, err = c.post(APIBaseURL+"/v1/vision/adult/detect", authTypeKakaoAK, nil, map[string]interface{}{
+			"file": file,
+		})
+
+		if err == nil {
+			var response ResponseDetectedNSFW
+			err = json.Unmarshal(bytes, &response)
+			if err == nil {
+				return response, nil
+			} else if c.Verbose {
+				log.Printf("* Failed to decode bytes: %s", string(bytes))
+			}
+		}
+	}
+
+	return ResponseDetectedNSFW{}, err
+}
+
+// DetectNSFWFromURL detects NSFW from given image of filepath
+//
+// https://developers.kakao.com/docs/latest/ko/vision/dev-guide#recog-adult-content
+func (c *Client) DetectNSFWFromURL(url string) (ResponseDetectedNSFW, error) {
+	bytes, err := c.post(APIBaseURL+"/v1/vision/adult/detect", authTypeKakaoAK, nil, map[string]interface{}{
+		"image_url": url,
+	})
+
+	if err == nil {
+		var response ResponseDetectedNSFW
+		err = json.Unmarshal(bytes, &response)
+		if err == nil {
+			return response, nil
+		} else if c.Verbose {
+			log.Printf("* Failed to decode bytes: %s", string(bytes))
+		}
+	}
+
+	return ResponseDetectedNSFW{}, err
+}
+
 // DetectProductFromFilepath detects products from the given filepath of an image
 //
-// https://developers.kakao.com/docs/restapi/vision#상품-검출
+// https://developers.kakao.com/docs/latest/ko/vision/dev-guide#recog-product
 func (c *Client) DetectProductFromFilepath(path string, threshold float32) (ResponseDetectedProduct, error) {
 	file, err := newFileParamFromFilepath(path)
 
@@ -87,7 +134,7 @@ func (c *Client) DetectProductFromFilepath(path string, threshold float32) (Resp
 
 // DetectProductFromURL detects products from the given url of an image
 //
-// https://developers.kakao.com/docs/restapi/vision#상품-검출
+// https://developers.kakao.com/docs/latest/ko/vision/dev-guide#recog-product
 func (c *Client) DetectProductFromURL(url string, threshold float32) (ResponseDetectedProduct, error) {
 	bytes, err := c.post(APIBaseURL+"/v1/vision/product/detect", authTypeKakaoAK, nil, map[string]interface{}{
 		"image_url": url,
@@ -109,7 +156,7 @@ func (c *Client) DetectProductFromURL(url string, threshold float32) (ResponseDe
 
 // CropThumbnailFromFilepath crops given image from filepath
 //
-// https://developers.kakao.com/docs/restapi/vision#썸네일-생성
+// https://developers.kakao.com/docs/latest/ko/vision/dev-guide#create-thumbnail
 func (c *Client) CropThumbnailFromFilepath(path string, width, height int) (ResponseCroppedThumbnail, error) {
 	file, err := newFileParamFromFilepath(path)
 
@@ -137,7 +184,7 @@ func (c *Client) CropThumbnailFromFilepath(path string, width, height int) (Resp
 
 // CropThumbnailFromURL crops given image from url
 //
-// https://developers.kakao.com/docs/restapi/vision#썸네일-생성
+// https://developers.kakao.com/docs/latest/ko/vision/dev-guide#create-thumbnail
 func (c *Client) CropThumbnailFromURL(url string, width, height int) (ResponseCroppedThumbnail, error) {
 	var bytes []byte
 	bytes, err := c.post(APIBaseURL+"/v1/vision/thumbnail/crop", authTypeKakaoAK, nil, map[string]interface{}{
@@ -161,7 +208,7 @@ func (c *Client) CropThumbnailFromURL(url string, width, height int) (ResponseCr
 
 // SuggestThumbnailFromFilepath generates a thumbnail from an image of given filepath
 //
-// https://developers.kakao.com/docs/restapi/vision#썸네일-검출
+// https://developers.kakao.com/docs/latest/ko/vision/dev-guide#extract-thumbnail
 func (c *Client) SuggestThumbnailFromFilepath(path string, width, height int) (ResponseSuggestedThumbnail, error) {
 	file, err := newFileParamFromFilepath(path)
 
@@ -189,7 +236,7 @@ func (c *Client) SuggestThumbnailFromFilepath(path string, width, height int) (R
 
 // SuggestThumbnailFromURL generates a thumbnail from an image of given url
 //
-// https://developers.kakao.com/docs/restapi/vision#썸네일-검출
+// https://developers.kakao.com/docs/latest/ko/vision/dev-guide#extract-thumbnail
 func (c *Client) SuggestThumbnailFromURL(url string, width, height int) (ResponseSuggestedThumbnail, error) {
 	bytes, err := c.post(APIBaseURL+"/v1/vision/thumbnail/detect", authTypeKakaoAK, nil, map[string]interface{}{
 		"image_url": url,
@@ -212,7 +259,7 @@ func (c *Client) SuggestThumbnailFromURL(url string, width, height int) (Respons
 
 // GenerateTagsFromFilepath generates tags from an image of given filepath
 //
-// https://developers.kakao.com/docs/restapi/vision#멀티태그-생성
+// https://developers.kakao.com/docs/latest/ko/vision/dev-guide#create-multi-tag
 func (c *Client) GenerateTagsFromFilepath(path string) (ResponseGeneratedTags, error) {
 	file, err := newFileParamFromFilepath(path)
 
@@ -238,7 +285,7 @@ func (c *Client) GenerateTagsFromFilepath(path string) (ResponseGeneratedTags, e
 
 // GenerateTagsFromURL generates tags from an image of given url
 //
-// https://developers.kakao.com/docs/restapi/vision#멀티태그-생성
+// https://developers.kakao.com/docs/latest/ko/vision/dev-guide#create-multi-tag
 func (c *Client) GenerateTagsFromURL(url string) (ResponseGeneratedTags, error) {
 	bytes, err := c.post(APIBaseURL+"/v1/vision/multitag/generate", authTypeKakaoAK, nil, map[string]interface{}{
 		"image_url": url,
@@ -257,20 +304,20 @@ func (c *Client) GenerateTagsFromURL(url string) (ResponseGeneratedTags, error) 
 	return ResponseGeneratedTags{}, err
 }
 
-// DetectNSFWFromFilepath detects NSFW from given image of filepath
+// DetectTextFromFilepath detects text area from an image of given filepath
 //
-// https://developers.kakao.com/docs/restapi/vision#성인-이미지-판별
-func (c *Client) DetectNSFWFromFilepath(path string) (ResponseDetectedNSFW, error) {
+// https://developers.kakao.com/docs/latest/ko/vision/dev-guide#detect-char
+func (c *Client) DetectTextFromFilepath(path string) (ResponseDetectedText, error) {
 	file, err := newFileParamFromFilepath(path)
 
 	if err == nil {
 		var bytes []byte
-		bytes, err = c.post(APIBaseURL+"/v1/vision/adult/detect", authTypeKakaoAK, nil, map[string]interface{}{
+		bytes, err = c.post(APIBaseURL+"/v1/vision/text/detect", authTypeKakaoAK, nil, map[string]interface{}{
 			"file": file,
 		})
 
 		if err == nil {
-			var response ResponseDetectedNSFW
+			var response ResponseDetectedText
 			err = json.Unmarshal(bytes, &response)
 			if err == nil {
 				return response, nil
@@ -280,26 +327,32 @@ func (c *Client) DetectNSFWFromFilepath(path string) (ResponseDetectedNSFW, erro
 		}
 	}
 
-	return ResponseDetectedNSFW{}, err
+	return ResponseDetectedText{}, err
 }
 
-// DetectNSFWFromURL detects NSFW from given image of filepath
+// RecognizeTextFromFilepath recognizes text from an image of given filpath and areas
 //
-// https://developers.kakao.com/docs/restapi/vision#성인-이미지-판별
-func (c *Client) DetectNSFWFromURL(url string) (ResponseDetectedNSFW, error) {
-	bytes, err := c.post(APIBaseURL+"/v1/vision/adult/detect", authTypeKakaoAK, nil, map[string]interface{}{
-		"image_url": url,
-	})
+// https://developers.kakao.com/docs/latest/ko/vision/dev-guide#recog-char
+func (c *Client) RecognizeTextFromFilepath(path string, boxes []DetectedTextBounds) (ResponseRecognizedText, error) {
+	file, err := newFileParamFromFilepath(path)
 
 	if err == nil {
-		var response ResponseDetectedNSFW
-		err = json.Unmarshal(bytes, &response)
+		var bytes []byte
+		bytes, err = c.post(APIBaseURL+"/v1/vision/text/recognize", authTypeKakaoAK, nil, map[string]interface{}{
+			"file":  file,
+			"boxes": boxes,
+		})
+
 		if err == nil {
-			return response, nil
-		} else if c.Verbose {
-			log.Printf("* Failed to decode bytes: %s", string(bytes))
+			var response ResponseRecognizedText
+			err = json.Unmarshal(bytes, &response)
+			if err == nil {
+				return response, nil
+			} else if c.Verbose {
+				log.Printf("* Failed to decode bytes: %s", string(bytes))
+			}
 		}
 	}
 
-	return ResponseDetectedNSFW{}, err
+	return ResponseRecognizedText{}, err
 }
