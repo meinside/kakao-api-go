@@ -15,16 +15,9 @@ import (
 
 // Created on 2019.03.25.
 //
-// Functions for [Speech APIs](https://developers.kakao.com/docs/restapi/speech)
-
-// TypeServiceMode is type for service mode domains
-type TypeServiceMode string
-
-// Service mode domains
-const (
-	ServiceModeDictation TypeServiceMode = "DICTATION"
-	ServiceModeLocal     TypeServiceMode = "LOCAL"
-)
+// Functions for [Speech APIs](https://developers.kakao.com/docs/latest/ko/voice/rest-api)
+//
+// SSML guide: https://developers.kakao.com/assets/guide/kakao_ssml_guide.pdf
 
 // TypeVoice is type for voice types
 type TypeVoice string
@@ -67,15 +60,14 @@ type Voice struct {
 
 // SpeechToText recognizes given speech (should be in mono, 16kHz, 16bit raw pcm format)
 //
-// https://developers.kakao.com/docs/restapi/speech#음성-인식-뉴톤-
-func (c *Client) SpeechToText(bs []byte, serviceMode TypeServiceMode) (result ResponseSpeechToText, err error) {
+// https://developers.kakao.com/docs/latest/ko/voice/rest-api#speech-to-text
+func (c *Client) SpeechToText(bs []byte) (result ResponseSpeechToText, err error) {
 	var req *http.Request
 	if req, err = http.NewRequest("POST", APINewtoneURL+"/v1/recognize", bytes.NewBuffer(bs)); err == nil {
 		// set HTTP headers
 		req.Header.Set("Content-Type", "application/octet-stream")
 		req.Header.Set("Transfer-Encoding", "chunked")
 		req.Header.Set("Authorization", c.authHeader(authTypeKakaoAK)) // set auth header
-		req.Header.Set("X-DSS-Service", string(serviceMode))
 
 		var resp *http.Response
 		resp, err = c.httpClient.Do(req)
@@ -179,22 +171,19 @@ func (c *Client) SpeechToText(bs []byte, serviceMode TypeServiceMode) (result Re
 	return ResponseSpeechToText{}, err
 }
 
-// TextToSpeech synthesizes a .mp3 file with given texts
+// TextToSpeech synthesizes a .mp3 file with given SSML(xml)
 //
-// https://developers.kakao.com/docs/restapi/speech#음성-합성-뉴톤톡-
-func (c *Client) TextToSpeech(speeches Speak) (file []byte, contentType string, err error) {
-	var bs []byte
-	if bs, err = xml.Marshal(speeches); err == nil {
-		var req *http.Request
-		if req, err = http.NewRequest("POST", APINewtoneURL+"/v1/synthesize", bytes.NewBuffer(bs)); err == nil {
-			// set HTTP headers
-			req.Header.Set("Content-Type", "application/xml")
-			req.Header.Set("Authorization", c.authHeader(authTypeKakaoAK)) // set auth header
+// https://developers.kakao.com/docs/latest/ko/voice/rest-api#text-to-speech
+func (c *Client) TextToSpeech(ssml []byte) (file []byte, contentType string, err error) {
+	var req *http.Request
+	if req, err = http.NewRequest("POST", APINewtoneURL+"/v1/synthesize", bytes.NewBuffer(ssml)); err == nil {
+		// set HTTP headers
+		req.Header.Set("Content-Type", "application/xml")
+		req.Header.Set("Authorization", c.authHeader(authTypeKakaoAK)) // set auth header
 
-			var res []byte
-			if res, err = c.fetchHTTPResponse(req); err == nil {
-				return res, http.DetectContentType(res), nil
-			}
+		var res []byte
+		if res, err = c.fetchHTTPResponse(req); err == nil {
+			return res, http.DetectContentType(res), nil
 		}
 	}
 

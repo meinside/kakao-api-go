@@ -24,7 +24,7 @@ func main() {
 
 	// recognize voices
 	if bs, err := ioutil.ReadFile(sampleFilename); err == nil {
-		if res, err := client.SpeechToText(bs, kakaoapi.ServiceModeDictation); err == nil {
+		if res, err := client.SpeechToText(bs); err == nil {
 			log.Printf("Recognized speech: %+v", res)
 		} else {
 			log.Printf("Failed to recognize speech: %s", err)
@@ -34,24 +34,11 @@ func main() {
 	}
 
 	// synthesize voices
-	if bs, contentType, err := client.TextToSpeech(kakaoapi.Speak{
-		Voices: []kakaoapi.Voice{
-			kakaoapi.Voice{
-				Text:        "헤이 카카오!",
-				VoiceType:   kakaoapi.VoiceDefault,
-				SpeechStyle: kakaoapi.StyleDefault,
-			},
-			kakaoapi.Voice{
-				Text:        "니가 가라 하와이.",
-				VoiceType:   kakaoapi.VoiceManDialogBright,
-				SpeechStyle: kakaoapi.StyleAltSlow,
-			},
-			kakaoapi.Voice{
-				Text:        "고니는 제가 아는 타짜 중에 최고였어요.",
-				VoiceType:   kakaoapi.VoiceWomanReadCalm,
-				SpeechStyle: kakaoapi.StyleAltFast,
-			},
-		}}); err == nil {
+	if bs, contentType, err := client.TextToSpeech([]byte(`<speak>
+	<voice name="MAN_READ_CALM">헤이 카카오!</voice>
+	<voice name="MAN_DIALOG_BRIGHT">니가 가라 하와이.</voice>
+	<voice name="WOMAN_READ_CALM">고니는 제가 아는 타짜 중에 최고였어요.</voice>
+</speak>`)); err == nil {
 		if err := ioutil.WriteFile(synthesizedFilename, bs, 0644); err == nil {
 			log.Printf("Synthesized voice saved to: %s (%d bytes, %s)", synthesizedFilename, len(bs), contentType)
 		} else {
