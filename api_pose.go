@@ -2,6 +2,7 @@ package kakaoapi
 
 import (
 	"encoding/json"
+	"fmt"
 	"log"
 )
 
@@ -61,6 +62,8 @@ func (c *Client) AnalyzePoseFromImageURL(url string) (ResponseAnalyzedPose, erro
 //
 // `callbackURL` can be "" (= don't callback)
 //
+// TODO: not tested yet (only for affiliated developers)
+//
 // https://developers.kakao.com/docs/latest/ko/pose/dev-guide#job-submit
 func (c *Client) AnalyzePoseFromVideoURL(videoURL string, smoothing bool, callbackURL string) (ResponseAnalyzedPoseFromVideoURLRequested, error) {
 	params := map[string]interface{}{
@@ -90,9 +93,7 @@ func (c *Client) AnalyzePoseFromVideoURL(videoURL string, smoothing bool, callba
 //
 // https://developers.kakao.com/docs/latest/ko/pose/dev-guide#job-retrieval
 func (c *Client) RetrieveAnalyzedPoseFromVideoURL(jobID string) (ResponseAnalyzedPoseFromVideoURL, error) {
-	bytes, err := c.post(APICVURL+"/pose/job", authTypeKakaoAK, nil, map[string]interface{}{
-		"job_id": jobID,
-	})
+	bytes, err := c.get(APICVURL+fmt.Sprintf("/pose/job/%s", jobID), authTypeKakaoAK, nil, nil)
 
 	if err == nil {
 		var response ResponseAnalyzedPoseFromVideoURL
