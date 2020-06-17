@@ -9,8 +9,7 @@ import (
 )
 
 const (
-	//apiKey = "0123456789abcdefghijklmnopqrstuvwxyz" // XXX - change this to your REST API key
-	apiKey = "1783501ee04a097a01c26e1d49564f4a" // XXX - change this to your REST API key
+	apiKey = "0123456789abcdefghijklmnopqrstuvwxyz" // XXX - change this to your REST API key
 
 	poseFilepath = "./pose.jpg"
 
