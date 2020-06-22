@@ -229,11 +229,11 @@ type ResponseAnalyzedPose []AnalyzedPose
 
 // AnalyzedPose struct
 type AnalyzedPose struct {
-	Area          float32   `json:"area"`
-	BoundingBoxes []float32 `json:"bbox"`
+	Area          float64   `json:"area"`
+	BoundingBoxes []float64 `json:"bbox"`
 	CategoryID    int       `json:"category_id"` // 1 for Person
-	KeyPoints     []float32 `json:"keypoints"`
-	Score         float32   `json:"score"`
+	KeyPoints     []float64 `json:"keypoints"`
+	Score         float64   `json:"score"`
 }
 
 // KeyPointIndex for indexing keypoints
@@ -261,7 +261,7 @@ const (
 )
 
 // KeyPointFor returns a keypoint value for given keypoint index
-func (p AnalyzedPose) KeyPointFor(index KeyPointIndex) (x, y, score float32) {
+func (p AnalyzedPose) KeyPointFor(index KeyPointIndex) (x, y, score float64) {
 	i := int(index)
 	idx1, idx2, idx3 := i*3, i*3+1, i*3+2
 
