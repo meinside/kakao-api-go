@@ -73,7 +73,7 @@ func main() {
 			log.Printf("Failed to recognize text: %s", err)
 		}
 	} else {
-		log.Printf("Failed to detect text: %s", prettify(text))
+		log.Printf("Failed to detect text: %s", err)
 	}
 }
 
