@@ -48,9 +48,9 @@ See the [samples here](https://github.com/meinside/kakao-api-go/tree/master/samp
 - [ ] [Map](https://developers.kakao.com/docs/latest/ko/kakaomap/common)
 - [ ] [Local](https://developers.kakao.com/docs/latest/ko/local/dev-guide)
 - [ ] [KakaoNavi](https://developers.kakao.com/docs/latest/ko/kakaonavi/common)
-- [X] [Vision](https://developers.kakao.com/docs/latest/ko/vision/dev-guide), last update: 2020.06.
+- [X] [Vision](https://developers.kakao.com/docs/latest/ko/vision/dev-guide), last update: 2020.08.
 - [X] [Pose](https://developers.kakao.com/docs/latest/ko/pose/dev-guide), last update: 2020.06.
-- [X] [Translation](https://developers.kakao.com/docs/latest/ko/translate/dev-guide), last update: 2020.06.
+- [X] [Translation](https://developers.kakao.com/docs/latest/ko/translate/dev-guide), last update: 2020.08.
 - [X] [Speech](https://developers.kakao.com/docs/latest/ko/voice/rest-api), last update: 2020.06.
 
 ## License

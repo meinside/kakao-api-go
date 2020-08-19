@@ -11,8 +11,8 @@ import (
 
 func (c *Client) detectFace(fp fileParam, threshold float32) (detected ResponseDetectedFace, err error) {
 	var bytes []byte
-	bytes, err = c.post(APIBaseURL+"/v1/vision/face/detect", authTypeKakaoAK, nil, map[string]interface{}{
-		"file":      fp,
+	bytes, err = c.post(APIBaseURL+"/v2/vision/face/detect", authTypeKakaoAK, nil, map[string]interface{}{
+		"image":     fp,
 		"threshold": threshold,
 	})
 
@@ -54,7 +54,7 @@ func (c *Client) DetectFaceFromFilepath(path string, threshold float32) (detecte
 // https://developers.kakao.com/docs/latest/ko/vision/dev-guide#recog-face
 func (c *Client) DetectFaceFromURL(url string, threshold float32) (detected ResponseDetectedFace, err error) {
 	var bytes []byte
-	bytes, err = c.post(APIBaseURL+"/v1/vision/face/detect", authTypeKakaoAK, nil, map[string]interface{}{
+	bytes, err = c.post(APIBaseURL+"/v2/vision/face/detect", authTypeKakaoAK, nil, map[string]interface{}{
 		"image_url": url,
 		"threshold": threshold,
 	})
@@ -73,8 +73,8 @@ func (c *Client) DetectFaceFromURL(url string, threshold float32) (detected Resp
 
 func (c *Client) detectNSFW(fp fileParam) (detected ResponseDetectedNSFW, err error) {
 	var bytes []byte
-	bytes, err = c.post(APIBaseURL+"/v1/vision/adult/detect", authTypeKakaoAK, nil, map[string]interface{}{
-		"file": fp,
+	bytes, err = c.post(APIBaseURL+"/v2/vision/adult/detect", authTypeKakaoAK, nil, map[string]interface{}{
+		"image": fp,
 	})
 
 	if err == nil {
@@ -113,7 +113,7 @@ func (c *Client) DetectNSFWFromFilepath(path string) (detected ResponseDetectedN
 //
 // https://developers.kakao.com/docs/latest/ko/vision/dev-guide#recog-adult-content
 func (c *Client) DetectNSFWFromURL(url string) (detected ResponseDetectedNSFW, err error) {
-	bytes, err := c.post(APIBaseURL+"/v1/vision/adult/detect", authTypeKakaoAK, nil, map[string]interface{}{
+	bytes, err := c.post(APIBaseURL+"/v2/vision/adult/detect", authTypeKakaoAK, nil, map[string]interface{}{
 		"image_url": url,
 	})
 
@@ -131,8 +131,8 @@ func (c *Client) DetectNSFWFromURL(url string) (detected ResponseDetectedNSFW, e
 
 func (c *Client) detectProduct(fp fileParam, threshold float32) (detected ResponseDetectedProduct, err error) {
 	var bytes []byte
-	bytes, err = c.post(APIBaseURL+"/v1/vision/product/detect", authTypeKakaoAK, nil, map[string]interface{}{
-		"file":      fp,
+	bytes, err = c.post(APIBaseURL+"/v2/vision/product/detect", authTypeKakaoAK, nil, map[string]interface{}{
+		"image":     fp,
 		"threshold": threshold,
 	})
 
@@ -174,7 +174,7 @@ func (c *Client) DetectProductFromFilepath(path string, threshold float32) (dete
 // https://developers.kakao.com/docs/latest/ko/vision/dev-guide#recog-product
 func (c *Client) DetectProductFromURL(url string, threshold float32) (detected ResponseDetectedProduct, err error) {
 	var bytes []byte
-	bytes, err = c.post(APIBaseURL+"/v1/vision/product/detect", authTypeKakaoAK, nil, map[string]interface{}{
+	bytes, err = c.post(APIBaseURL+"/v2/vision/product/detect", authTypeKakaoAK, nil, map[string]interface{}{
 		"image_url": url,
 		"threshold": threshold,
 	})
@@ -193,8 +193,8 @@ func (c *Client) DetectProductFromURL(url string, threshold float32) (detected R
 
 func (c *Client) cropThumbnail(fp fileParam, width, height int) (cropped ResponseCroppedThumbnail, err error) {
 	var bytes []byte
-	bytes, err = c.post(APIBaseURL+"/v1/vision/thumbnail/crop", authTypeKakaoAK, nil, map[string]interface{}{
-		"file":   fp,
+	bytes, err = c.post(APIBaseURL+"/v2/vision/thumbnail/crop", authTypeKakaoAK, nil, map[string]interface{}{
+		"image":  fp,
 		"width":  width,
 		"height": height,
 	})
@@ -237,7 +237,7 @@ func (c *Client) CropThumbnailFromFilepath(path string, width, height int) (crop
 // https://developers.kakao.com/docs/latest/ko/vision/dev-guide#create-thumbnail
 func (c *Client) CropThumbnailFromURL(url string, width, height int) (cropped ResponseCroppedThumbnail, err error) {
 	var bytes []byte
-	bytes, err = c.post(APIBaseURL+"/v1/vision/thumbnail/crop", authTypeKakaoAK, nil, map[string]interface{}{
+	bytes, err = c.post(APIBaseURL+"/v2/vision/thumbnail/crop", authTypeKakaoAK, nil, map[string]interface{}{
 		"image_url": url,
 		"width":     width,
 		"height":    height,
@@ -257,8 +257,8 @@ func (c *Client) CropThumbnailFromURL(url string, width, height int) (cropped Re
 
 func (c *Client) suggestThumbnail(fp fileParam, width, height int) (suggested ResponseSuggestedThumbnail, err error) {
 	var bytes []byte
-	bytes, err = c.post(APIBaseURL+"/v1/vision/thumbnail/detect", authTypeKakaoAK, nil, map[string]interface{}{
-		"file":   fp,
+	bytes, err = c.post(APIBaseURL+"/v2/vision/thumbnail/detect", authTypeKakaoAK, nil, map[string]interface{}{
+		"image":  fp,
 		"width":  width,
 		"height": height,
 	})
@@ -300,7 +300,7 @@ func (c *Client) SuggestThumbnailFromFilepath(path string, width, height int) (s
 //
 // https://developers.kakao.com/docs/latest/ko/vision/dev-guide#extract-thumbnail
 func (c *Client) SuggestThumbnailFromURL(url string, width, height int) (suggested ResponseSuggestedThumbnail, err error) {
-	bytes, err := c.post(APIBaseURL+"/v1/vision/thumbnail/detect", authTypeKakaoAK, nil, map[string]interface{}{
+	bytes, err := c.post(APIBaseURL+"/v2/vision/thumbnail/detect", authTypeKakaoAK, nil, map[string]interface{}{
 		"image_url": url,
 		"width":     width,
 		"height":    height,
@@ -320,8 +320,8 @@ func (c *Client) SuggestThumbnailFromURL(url string, width, height int) (suggest
 
 func (c *Client) generateTags(fp fileParam) (generated ResponseGeneratedTags, err error) {
 	var bytes []byte
-	bytes, err = c.post(APIBaseURL+"/v1/vision/multitag/generate", authTypeKakaoAK, nil, map[string]interface{}{
-		"file": fp,
+	bytes, err = c.post(APIBaseURL+"/v2/vision/multitag/generate", authTypeKakaoAK, nil, map[string]interface{}{
+		"image": fp,
 	})
 
 	if err == nil {
@@ -362,7 +362,7 @@ func (c *Client) GenerateTagsFromFilepath(path string) (generated ResponseGenera
 // https://developers.kakao.com/docs/latest/ko/vision/dev-guide#create-multi-tag
 func (c *Client) GenerateTagsFromURL(url string) (generated ResponseGeneratedTags, err error) {
 	var bytes []byte
-	bytes, err = c.post(APIBaseURL+"/v1/vision/multitag/generate", authTypeKakaoAK, nil, map[string]interface{}{
+	bytes, err = c.post(APIBaseURL+"/v2/vision/multitag/generate", authTypeKakaoAK, nil, map[string]interface{}{
 		"image_url": url,
 	})
 
@@ -380,8 +380,8 @@ func (c *Client) GenerateTagsFromURL(url string) (generated ResponseGeneratedTag
 
 func (c *Client) detectText(fp fileParam) (detected ResponseDetectedText, err error) {
 	var bytes []byte
-	bytes, err = c.post(APIBaseURL+"/v1/vision/text/detect", authTypeKakaoAK, nil, map[string]interface{}{
-		"file": fp,
+	bytes, err = c.post(APIBaseURL+"/v2/vision/text/ocr", authTypeKakaoAK, nil, map[string]interface{}{
+		"image": fp,
 	})
 
 	if err == nil {
@@ -389,7 +389,7 @@ func (c *Client) detectText(fp fileParam) (detected ResponseDetectedText, err er
 		if err == nil {
 			return detected, nil
 		} else if c.Verbose {
-			log.Printf("* Failed to decode bytes while detecting text from file: %s", string(bytes))
+			log.Printf("* Failed to decode bytes while detecting text from file: %d byte(s)", len(bytes))
 		}
 	}
 
@@ -398,7 +398,7 @@ func (c *Client) detectText(fp fileParam) (detected ResponseDetectedText, err er
 
 // DetectTextFromBytes detects text area from an image of given bytes array
 //
-// https://developers.kakao.com/docs/latest/ko/vision/dev-guide#detect-char
+// https://developers.kakao.com/docs/latest/ko/vision/dev-guide#ocr
 func (c *Client) DetectTextFromBytes(bytes []byte) (detected ResponseDetectedText, err error) {
 	img := newFileParamFromBytes(bytes)
 
@@ -407,7 +407,7 @@ func (c *Client) DetectTextFromBytes(bytes []byte) (detected ResponseDetectedTex
 
 // DetectTextFromFilepath detects text area from an image of given filepath
 //
-// https://developers.kakao.com/docs/latest/ko/vision/dev-guide#detect-char
+// https://developers.kakao.com/docs/latest/ko/vision/dev-guide#ocr
 func (c *Client) DetectTextFromFilepath(path string) (detected ResponseDetectedText, err error) {
 	var img fileParam
 	if img, err = newFileParamFromFilepath(path); err == nil {
@@ -415,44 +415,4 @@ func (c *Client) DetectTextFromFilepath(path string) (detected ResponseDetectedT
 	}
 
 	return ResponseDetectedText{}, err
-}
-
-func (c *Client) recognizeText(fp fileParam, boxes []DetectedTextBounds) (recognized ResponseRecognizedText, err error) {
-	var bytes []byte
-	bytes, err = c.post(APIBaseURL+"/v1/vision/text/recognize", authTypeKakaoAK, nil, map[string]interface{}{
-		"file":  fp,
-		"boxes": boxes,
-	})
-
-	if err == nil {
-		err = json.Unmarshal(bytes, &recognized)
-		if err == nil {
-			return recognized, nil
-		} else if c.Verbose {
-			log.Printf("* Failed to decode bytes while recognizing text from file: %s", string(bytes))
-		}
-	}
-
-	return ResponseRecognizedText{}, err
-}
-
-// RecognizeTextFromBytes recognizes text from an image of given bytes array and areas
-//
-// https://developers.kakao.com/docs/latest/ko/vision/dev-guide#recog-char
-func (c *Client) RecognizeTextFromBytes(bytes []byte, boxes []DetectedTextBounds) (recognized ResponseRecognizedText, err error) {
-	img := newFileParamFromBytes(bytes)
-
-	return c.recognizeText(img, boxes)
-}
-
-// RecognizeTextFromFilepath recognizes text from an image of given filpath and areas
-//
-// https://developers.kakao.com/docs/latest/ko/vision/dev-guide#recog-char
-func (c *Client) RecognizeTextFromFilepath(path string, boxes []DetectedTextBounds) (recognized ResponseRecognizedText, err error) {
-	var img fileParam
-	if img, err = newFileParamFromFilepath(path); err == nil {
-		return c.recognizeText(img, boxes)
-	}
-
-	return ResponseRecognizedText{}, err
 }

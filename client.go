@@ -20,7 +20,7 @@ import (
 
 // Constants
 const (
-	APIBaseURL    = "https://kapi.kakao.com"
+	APIBaseURL    = "https://dapi.kakao.com"
 	APINewtoneURL = "https://kakaoi-newtone-openapi.kakao.com"
 	APICVURL      = "https://cv-api.kakaobrain.com"
 )
@@ -132,7 +132,9 @@ func (c *Client) post(apiURL string, authType authType, headers map[string]strin
 		// parameters
 		data := url.Values{}
 		for k, v := range params {
-			if bytes, err := json.Marshal(v); err == nil {
+			if str, ok := v.(string); ok {
+				data.Set(k, str)
+			} else if bytes, err := json.Marshal(v); err == nil {
 				data.Set(k, string(bytes))
 			} else {
 				data.Set(k, fmt.Sprintf("%v", v))
