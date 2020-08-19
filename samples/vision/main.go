@@ -65,13 +65,6 @@ func main() {
 	// detect text
 	if text, err := client.DetectTextFromFilepath(textFilepath); err == nil {
 		log.Printf("Detected text: %s", prettify(text))
-
-		// and then recognize it
-		if recognized, err := client.RecognizeTextFromFilepath(textFilepath, text.Result.Boxes); err == nil {
-			log.Printf("Recognized text: %s", prettify(recognized))
-		} else {
-			log.Printf("Failed to recognize text: %s", err)
-		}
 	} else {
 		log.Printf("Failed to detect text: %s", err)
 	}

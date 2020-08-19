@@ -184,19 +184,11 @@ type DetectedTextBounds []DetectedTextBoundPoint // [left-upper-point, right-upp
 
 // ResponseDetectedText struct
 //
-// https://developers.kakao.com/docs/latest/ko/vision/dev-guide#detect-char
+// https://developers.kakao.com/docs/latest/ko/vision/dev-guide#ocr
 type ResponseDetectedText struct {
-	Result struct {
-		Boxes []DetectedTextBounds `json:"boxes"`
-	} `json:"result"`
-}
-
-// ResponseRecognizedText struct
-//
-// https://developers.kakao.com/docs/latest/ko/vision/dev-guide#recog-char
-type ResponseRecognizedText struct {
-	Result struct {
-		RecognizedWords []string `json:"recognition_words"`
+	Result []struct {
+		Boxes           DetectedTextBounds `json:"boxes"`
+		RecognizedWords []string           `json:"recognition_words"`
 	} `json:"result"`
 }
 
@@ -205,6 +197,16 @@ type ResponseRecognizedText struct {
 // https://developers.kakao.com/docs/latest/ko/translate/dev-guide#trans-sentence
 type ResponseTranslatedText struct {
 	Phrases [][]string `json:"translated_text"`
+}
+
+// ResponseDetectedLanguage struct
+//
+// https://developers.kakao.com/docs/latest/ko/translate/dev-guide#language-detect
+type ResponseDetectedLanguage struct {
+	LanguageInfo struct {
+		Code TypeLanguage `json:"code"` // https://developers.kakao.com/docs/latest/ko/translate/common#language
+		Name string       `json:"name"`
+	} `json:"language_info"`
 }
 
 // ResponseSpeechToText struct

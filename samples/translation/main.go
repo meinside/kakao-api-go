@@ -34,6 +34,13 @@ func main() {
 	} else {
 		log.Printf("Failed to translate text: %s", err)
 	}
+
+	// detect language
+	if detected, err := client.DetectLanguage(koreanText); err == nil {
+		log.Printf("Detected language: %s", prettify(detected))
+	} else {
+		log.Printf("Failed to detect language from text: %s", err)
+	}
 }
 
 func prettify(obj interface{}) string {
