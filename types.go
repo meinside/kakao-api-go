@@ -50,6 +50,16 @@ func newFileParamFromFilepath(path string) (fileParam, error) {
 // common structs
 //
 
+// ResponseError is the struct for API error responses
+type ResponseError struct {
+	Code int `json:"code,omitempty"`
+
+	ErrorType string `json:"errorType,omitempty"`
+
+	Msg     string `json:"msg,omitempty"`
+	Message string `json:"message,omitempty"`
+}
+
 // Point type
 type Point []float64 // float64 array with length=2
 
@@ -72,12 +82,6 @@ func (p Point) Y() float64 {
 ///////////////////////////////
 // structs for vision API
 //
-
-// ResponseError is the struct for vision API error responses
-type ResponseError struct {
-	Message string `json:"msg"`
-	Code    int    `json:"code"`
-}
 
 // ResponseDetectedFace struct
 //

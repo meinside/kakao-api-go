@@ -199,7 +199,22 @@ func (c *Client) fetchHTTPResponse(req *http.Request) (response []byte, err erro
 
 			var errResponse ResponseError
 			if err := json.Unmarshal(bytes, &errResponse); err == nil {
-				return bytes, fmt.Errorf("API error with response code: %d, message: %s", errResponse.Code, errResponse.Message)
+				var err error
+				var errMsg string
+
+				if len(errResponse.Message) > 0 {
+					errMsg = errResponse.Message
+				} else {
+					errMsg = errResponse.Msg
+				}
+
+				if errResponse.Code > 0 {
+					err = fmt.Errorf("API error with response code: %d, message: %s", errResponse.Code, errMsg)
+				} else {
+					err = fmt.Errorf("API error with error type: %s, message: %s", errResponse.ErrorType, errMsg)
+				}
+
+				return bytes, err
 			}
 
 			return bytes, fmt.Errorf("HTTP status %d %s", resp.StatusCode, string(bytes))
