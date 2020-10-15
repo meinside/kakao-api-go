@@ -67,7 +67,7 @@ func (c *Client) TranslateText(text string, fromLanguage, toLanguage TypeLanguag
 func (c *Client) DetectLanguage(text string) (ResponseDetectedLanguage, error) {
 	var bytes []byte
 	var err error
-	bytes, err = c.post(APIBaseURL+"/v2/translation/language/detect", authTypeKakaoAK, nil, map[string]interface{}{
+	bytes, err = c.post(APIBaseURL+"/v3/translation/language/detect", authTypeKakaoAK, nil, map[string]interface{}{
 		"query": text,
 	})
 
