@@ -207,9 +207,10 @@ type ResponseTranslatedText struct {
 //
 // https://developers.kakao.com/docs/latest/ko/translate/dev-guide#language-detect
 type ResponseDetectedLanguage struct {
-	LanguageInfo struct {
-		Code TypeLanguage `json:"code"` // https://developers.kakao.com/docs/latest/ko/translate/common#language
-		Name string       `json:"name"`
+	LanguageInfo []struct {
+		Code       TypeLanguage `json:"code"` // https://developers.kakao.com/docs/latest/ko/translate/common#language
+		Name       string       `json:"name"`
+		Confidence float64      `json:"confidence"`
 	} `json:"language_info"`
 }
 
