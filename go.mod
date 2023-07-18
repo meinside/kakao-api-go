@@ -1,3 +1,3 @@
 module github.com/meinside/kakao-api-go
 
-go 1.14
+go 1.20
