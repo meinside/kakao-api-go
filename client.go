@@ -11,7 +11,6 @@ import (
 	"net"
 	"net/http"
 	"net/http/httputil"
-	"net/url"
 	"strings"
 	"time"
 )
@@ -20,9 +19,8 @@ import (
 
 // Constants
 const (
-	APIBaseURL    = "https://dapi.kakao.com"
-	APINewtoneURL = "https://kakaoi-newtone-openapi.kakao.com"
-	APICVURL      = "https://cv-api.kakaobrain.com"
+	APIBaseURLKoGPT = "https://api.kakaobrain.com/v1/inference/kogpt"
+	APIBaseURLKarlo = "https://api.kakaobrain.com/v2/inference/karlo"
 )
 
 // Client struct
@@ -56,7 +54,7 @@ func NewClient(apiKey string) *Client {
 // HTTP functions
 
 // HTTP GET
-func (c *Client) get(apiURL string, authType authType, headers map[string]string, params map[string]interface{}) ([]byte, error) {
+func (c *Client) get(apiURL string, authType authType, headers map[string]string, params map[string]any) ([]byte, error) {
 	var err error
 	var req *http.Request
 	if req, err = http.NewRequest("GET", apiURL, nil); err == nil {
@@ -80,7 +78,7 @@ func (c *Client) get(apiURL string, authType authType, headers map[string]string
 }
 
 // HTTP POST
-func (c *Client) post(apiURL string, authType authType, headers map[string]string, params map[string]interface{}) ([]byte, error) {
+func (c *Client) post(apiURL string, authType authType, headers map[string]string, params map[string]any) ([]byte, error) {
 	var err error
 
 	if hasFileInParams(params) {
@@ -127,30 +125,24 @@ func (c *Client) post(apiURL string, authType authType, headers map[string]strin
 			return c.fetchHTTPResponse(req)
 		}
 	} else {
-		// application/x-www-form-urlencoded
+		// application/json
 
 		// parameters
-		data := url.Values{}
-		for k, v := range params {
-			if str, ok := v.(string); ok {
-				data.Set(k, str)
-			} else if bytes, err := json.Marshal(v); err == nil {
-				data.Set(k, string(bytes))
-			} else {
-				data.Set(k, fmt.Sprintf("%v", v))
-			}
-		}
+		var body []byte
+		body, err = json.Marshal(params)
 
-		var req *http.Request
-		if req, err = http.NewRequest("POST", apiURL, strings.NewReader(data.Encode())); err == nil {
-			// set HTTP headers
-			for k, v := range headers {
-				req.Header.Set(k, v)
-			}
-			req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
-			req.Header.Set("Authorization", c.authHeader(authType)) // set auth header
+		if err == nil {
+			var req *http.Request
+			if req, err = http.NewRequest("POST", apiURL, bytes.NewBuffer(body)); err == nil {
+				// set HTTP headers
+				for k, v := range headers {
+					req.Header.Set(k, v)
+				}
+				req.Header.Set("Content-Type", "application/json; charset=utf-8")
+				req.Header.Set("Authorization", c.authHeader(authType)) // set auth header
 
-			return c.fetchHTTPResponse(req)
+				return c.fetchHTTPResponse(req)
+			}
 		}
 	}
 
@@ -239,7 +231,7 @@ func (c *Client) authHeader(method authType) string {
 }
 
 // checks if given `params` has any fileParam in it
-func hasFileInParams(params map[string]interface{}) bool {
+func hasFileInParams(params map[string]any) bool {
 	for _, v := range params {
 		if _, ok := v.(fileParam); ok {
 			return true

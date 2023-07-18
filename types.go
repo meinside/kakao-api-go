@@ -1,8 +1,6 @@
 package kakaoapi
 
-import (
-	"io/ioutil"
-)
+import "os"
 
 ///////////////////////////////
 // types, structs, and functions for HTTP
@@ -37,7 +35,7 @@ func newFileParamFromBytes(bytes []byte) fileParam {
 func newFileParamFromFilepath(path string) (fileParam, error) {
 	var bytes []byte
 	var err error
-	if bytes, err = ioutil.ReadFile(path); err == nil {
+	if bytes, err = os.ReadFile(path); err == nil {
 		return fileParam{
 			bytes: bytes,
 		}, nil
@@ -60,289 +58,188 @@ type ResponseError struct {
 	Message string `json:"message,omitempty"`
 }
 
-// Point type
-type Point []float64 // float64 array with length=2
-
-// X returns `x` from this Point
-func (p Point) X() float64 {
-	if len(p) > 0 {
-		return p[0]
-	}
-	return 0
-}
-
-// Y returns `y` from this Point
-func (p Point) Y() float64 {
-	if len(p) > 1 {
-		return p[1]
-	}
-	return 0
-}
-
 ///////////////////////////////
-// structs for vision API
+// API request & response structs
 //
 
-// ResponseDetectedFace struct
-//
-// https://developers.kakao.com/docs/latest/ko/vision/dev-guide#recog-face
-type ResponseDetectedFace struct {
-	Result struct {
-		Width  int `json:"width"`
-		Height int `json:"height"`
-		Faces  []struct {
-			FacialAttributes struct {
-				Gender struct {
-					Male   float64 `json:"male"`
-					Female float64 `json:"female"`
-				} `json:"gender"`
-			} `json:"facial_attributes"`
-			FacialPoints struct {
-				Jaw          []Point `json:"jaw"`
-				RightEyebrow []Point `json:"right_eyebrow"`
-				LeftEyebrow  []Point `json:"left_eyebrow"`
-				Nose         []Point `json:"nose"`
-				RightEye     []Point `json:"right_eye"`
-				LeftEye      []Point `json:"left_eye"`
-				Lip          []Point `json:"lip"`
-			} `json:"facial_points"`
-			Score      float64 `json:"score"`
-			ClassIndex int     `json:"class_idx"`
-			X          float64 `json:"x"`
-			Y          float64 `json:"y"`
-			W          float64 `json:"w"`
-			H          float64 `json:"h"`
-			Pitch      float64 `json:"pitch"`
-			Yaw        float64 `json:"yaw"`
-			Roll       float64 `json:"roll"`
-		} `json:"faces"`
-	} `json:"result"`
-}
+type ParamsTextGeneration map[string]any
 
-// ResponseDetectedNSFW struct
-//
-// https://developers.kakao.com/docs/latest/ko/vision/dev-guide#recog-adult-content
-type ResponseDetectedNSFW struct {
-	Result struct {
-		Normal float64 `json:"normal"`
-		Soft   float64 `json:"soft"`
-		Adult  float64 `json:"adult"`
-	} `json:"result"`
-}
-
-// ResponseDetectedProduct struct
-//
-// https://developers.kakao.com/docs/latest/ko/vision/dev-guide#recog-product
-type ResponseDetectedProduct struct {
-	Result struct {
-		Width   int `json:"width"`
-		Height  int `json:"height"`
-		Objects []struct {
-			X1    float64 `json:"x1"`
-			Y1    float64 `json:"y1"`
-			X2    float64 `json:"x2"`
-			Y2    float64 `json:"y2"`
-			Class string  `json:"class"`
-		} `json:"objects"`
-	} `json:"result"`
-}
-
-// ResponseCroppedThumbnail struct
-//
-// https://developers.kakao.com/docs/latest/ko/vision/dev-guide#create-thumbnail
-type ResponseCroppedThumbnail struct {
-	ThumbnailImageURL string `json:"thumbnail_image_url"`
-}
-
-// ResponseSuggestedThumbnail struct
-//
-// https://developers.kakao.com/docs/latest/ko/vision/dev-guide#extract-thumbnail
-type ResponseSuggestedThumbnail struct {
-	Result struct {
-		Width     int `json:"width"`
-		Height    int `json:"height"`
-		Thumbnail struct {
-			X      int `json:"x"`
-			Y      int `json:"y"`
-			Width  int `json:"width"`
-			Height int `json:"height"`
-		} `json:"thumbnail"`
-	} `json:"result"`
-}
-
-// ResponseGeneratedTags struct
-//
-// https://developers.kakao.com/docs/latest/ko/vision/dev-guide#create-multi-tag
-type ResponseGeneratedTags struct {
-	Result struct {
-		Labels       []string `json:"label"`
-		LabelsKorean []string `json:"label_kr"`
-	} `json:"result"`
-}
-
-// DetectedTextBoundPoint type
-type DetectedTextBoundPoint []int // [x, y]
-
-// DetectedTextBounds type
-type DetectedTextBounds []DetectedTextBoundPoint // [left-upper-point, right-upper-point, right-lower-point, left-lower-point]
-
-// ResponseDetectedText struct
-//
-// https://developers.kakao.com/docs/latest/ko/vision/dev-guide#ocr
-type ResponseDetectedText struct {
-	Result []struct {
-		Boxes           DetectedTextBounds `json:"boxes"`
-		RecognizedWords []string           `json:"recognition_words"`
-	} `json:"result"`
-}
-
-// ResponseTranslatedText struct
-//
-// https://developers.kakao.com/docs/latest/ko/translate/dev-guide#trans-sentence
-type ResponseTranslatedText struct {
-	Phrases [][]string `json:"translated_text"`
-}
-
-// ResponseDetectedLanguage struct
-//
-// https://developers.kakao.com/docs/latest/ko/translate/dev-guide#language-detect
-type ResponseDetectedLanguage struct {
-	LanguageInfo []struct {
-		Code       TypeLanguage `json:"code"` // https://developers.kakao.com/docs/latest/ko/translate/common#language
-		Name       string       `json:"name"`
-		Confidence float64      `json:"confidence"`
-	} `json:"language_info"`
-}
-
-// ResponseSpeechToText struct
-//
-// https://developers.kakao.com/docs/latest/ko/voice/rest-api#speech-to-text
-type ResponseSpeechToText struct {
-	Type  string                  `json:"type"`
-	Value string                  `json:"value"`
-	NBest []SpeechToTextCandidate `json:"nBest"`
-}
-
-// SpeechToTextCandidate struct
-type SpeechToTextCandidate struct {
-	Value string `json:"value"`
-	Score int    `json:"score"`
-}
-
-// ResponseAnalyzedPose struct
-//
-// https://developers.kakao.com/docs/latest/ko/pose/dev-guide#image-pose-estimation
-type ResponseAnalyzedPose []AnalyzedPose
-
-// AnalyzedPose struct
-type AnalyzedPose struct {
-	Area          float64   `json:"area"`
-	BoundingBoxes []float64 `json:"bbox"`
-	CategoryID    int       `json:"category_id"` // 1 for Person
-	KeyPoints     []float64 `json:"keypoints"`
-	Score         float64   `json:"score"`
-}
-
-// KeyPointIndex for indexing keypoints
-type KeyPointIndex int
-
-// KeyPointIndex values
-const (
-	KeyPointIndexNose          KeyPointIndex = 0
-	KeyPointIndexLeftEye       KeyPointIndex = 1
-	KeyPointIndexRightEye      KeyPointIndex = 2
-	KeyPointIndexLeftEar       KeyPointIndex = 3
-	KeyPointIndexRightEar      KeyPointIndex = 4
-	KeyPointIndexLeftShoulder  KeyPointIndex = 5
-	KeyPointIndexRightShoulder KeyPointIndex = 6
-	KeyPointIndexLeftElbow     KeyPointIndex = 7
-	KeyPointIndexRightElbow    KeyPointIndex = 8
-	KeyPointIndexLeftWrist     KeyPointIndex = 9
-	KeyPointIndexRightWrist    KeyPointIndex = 10
-	KeyPointIndexLeftHip       KeyPointIndex = 11
-	KeyPointIndexRightHip      KeyPointIndex = 12
-	KeyPointIndexLeftKnee      KeyPointIndex = 13
-	KeyPointIndexRightKnee     KeyPointIndex = 14
-	KeyPointIndexLeftAnkle     KeyPointIndex = 15
-	KeyPointIndexRightAnkle    KeyPointIndex = 16
-)
-
-// KeyPointFor returns a keypoint value for given keypoint index
-func (p AnalyzedPose) KeyPointFor(index KeyPointIndex) (x, y, score float64) {
-	i := int(index)
-	idx1, idx2, idx3 := i*3, i*3+1, i*3+2
-
-	count := len(p.KeyPoints)
-	if idx1 < count && idx2 < count && idx3 < count {
-		x = p.KeyPoints[idx1]
-		y = p.KeyPoints[idx2]
-		score = p.KeyPoints[idx3]
+// NewParamsTextGeneration creates a new ParamsTextGeneration.
+func NewParamsTextGeneration(prompt string, maxTokens int) ParamsTextGeneration {
+	return ParamsTextGeneration{
+		"prompt":     prompt,
+		"max_tokens": maxTokens,
 	}
-
-	return x, y, score
 }
 
-// ResponseAnalyzedPoseFromVideoURLRequested struct
-//
-// https://developers.kakao.com/docs/latest/ko/pose/dev-guide#job-submit
-type ResponseAnalyzedPoseFromVideoURLRequested struct {
-	JobID string `json:"job_id"`
+// SetTemp sets the temperature of ParamsTextGeneration.
+func (p ParamsTextGeneration) SetTemp(temp float64) ParamsTextGeneration {
+	p["temperature"] = temp
+	return p
 }
 
-// PoseAnalysisStatus type
-type PoseAnalysisStatus string
+// SetTopP sets the top_p of ParamsTextGeneration.
+func (p ParamsTextGeneration) SetTopP(topP float64) ParamsTextGeneration {
+	p["top_p"] = topP
+	return p
+}
 
-// PoseAnalysisStatus constants
+// SetN sets the n of ParamsTextGeneration.
+func (p ParamsTextGeneration) SetN(n int) ParamsTextGeneration {
+	p["n"] = n
+	return p
+}
+
+// ResponseGeneratedTexts is the struct for generated texts
+type ResponseGeneratedTexts struct {
+	ID          string `json:"id"`
+	Generations []struct {
+		Text   string `json:"text"`
+		Tokens int    `json:"tokens"`
+	} `json:"generations"`
+	Usage struct {
+		PromptTokens    int `json:"prompt_tokens"`
+		GeneratedTokens int `json:"generated_tokens"`
+		TotalTokens     int `json:"total_tokens"`
+	} `json:"usage"`
+}
+
+type ImageFormat string
+
 const (
-	PoseAnalysisStatusWaiting    PoseAnalysisStatus = "waiting"
-	PoseAnalysisStatusProcessing PoseAnalysisStatus = "processing"
-	PoseAnalysisStatusSuccess    PoseAnalysisStatus = "success"
-	PoseAnalysisStatusFailed     PoseAnalysisStatus = "failed"
-	PoseAnalysisStatusNotFound   PoseAnalysisStatus = "not found"
+	ImageFormatWEBP ImageFormat = "webp"
+	ImageFormatJPEG ImageFormat = "jpeg"
+	ImageFormatPNG  ImageFormat = "png"
 )
 
-// PoseAnnotation struct
-type PoseAnnotation struct {
-	FrameNum int            `json:"frame_num"` // 0 ~ n-1
-	Objects  []AnalyzedPose `json:"objects"`
+type ImageReturnType string
+
+const (
+	ImageReturnURL    ImageReturnType = "url"
+	ImageReturnBase64 ImageReturnType = "base64_string"
+)
+
+type ImageDecodeScheduler string
+
+const (
+	ImageDecodeSchedulerDDIM ImageDecodeScheduler = "decoder_ddim_v_prediction"
+	ImageDecodeSchedulerDDPM ImageDecodeScheduler = "decoder_ddpm_v_prediction"
+)
+
+type ParamsImageGeneration map[string]any
+
+// NewParamsImageGeneration creates a new ParamsImageGeneration.
+func NewParamsImageGeneration(prompt string) ParamsImageGeneration {
+	return ParamsImageGeneration{
+		"prompt": prompt,
+	}
 }
 
-// KeyPointCategory struct
-type KeyPointCategory struct {
-	ID            int      `json:"id"` // = 1 (for person)
-	KeyPoints     []string `json:"keypoints"`
-	Name          string   `json:"name"` // = "person"
-	Skeleton      [][]int  `json:"skeleton"`
-	SuperCategory string   `json:"supercategory"` // = "person"
+// SetNegativePrompt sets the negative prompt of ParamsImageGeneration.
+func (p ParamsImageGeneration) SetNegativePrompt(negativePrompt string) ParamsImageGeneration {
+	p["negative_prompt"] = negativePrompt
+	return p
 }
 
-// PoseInfo struct
-type PoseInfo struct {
-	Contributor string `json:"contributor"`
-	DateCreated string `json:"date_created"`
-	Description string `json:"description"`
-	URL         string `json:"url"`
-	Version     string `json:"version"`
-	Year        int    `json:"year"`
+// SetWidth sets the width of ParamsImageGeneration.
+func (p ParamsImageGeneration) SetWidth(width int) ParamsImageGeneration {
+	p["width"] = width
+	return p
 }
 
-// PoseVideo struct
-type PoseVideo struct {
-	FPS    float32 `json:"fps"`
-	Frames int     `json:"frames"`
-	Height int     `json:"height"`
-	Width  int     `json:"width"`
+// SetHeight sets the height of ParamsImageGeneration.
+func (p ParamsImageGeneration) SetHeight(height int) ParamsImageGeneration {
+	p["height"] = height
+	return p
 }
 
-// ResponseAnalyzedPoseFromVideoURL struct
-//
-// https://developers.kakao.com/docs/latest/ko/pose/dev-guide#job-retrieval
-type ResponseAnalyzedPoseFromVideoURL struct {
-	Annotations []PoseAnnotation   `json:"annotations,omitempty"` // returns only when `status` == "success"
-	Categories  []KeyPointCategory `json:"categories,omitempty"`  // returns only when `status` == "success"
-	Info        PoseInfo           `json:"info,omitempty"`        // returns only when `status` == "success"
-	JobID       string             `json:"job_id"`
-	Status      PoseAnalysisStatus `json:"status"`
-	Video       PoseVideo          `json:"video,omitempty"`       // returns only when `status` == "success"
-	Description string             `json:"description,omitempty"` // returns only when `status` == "failed"
+// SetUpscale sets the upscale of ParamsImageGeneration.
+func (p ParamsImageGeneration) SetUpscale(upscale bool) ParamsImageGeneration {
+	p["upscale"] = upscale
+	return p
+}
+
+// SetScale sets the scale of ParamsImageGeneration.
+func (p ParamsImageGeneration) SetScale(scale int) ParamsImageGeneration {
+	p["scale"] = scale
+	return p
+}
+
+// SetImageFormat sets the image format of ParamsImageGeneration.
+func (p ParamsImageGeneration) SetImageFormat(format ImageFormat) ParamsImageGeneration {
+	p["image_format"] = format
+	return p
+}
+
+// SetImageQuality sets the image quality of ParamsImageGeneration.
+func (p ParamsImageGeneration) SetImageQuality(quality int) ParamsImageGeneration {
+	p["image_quality"] = quality
+	return p
+}
+
+// SetSamples sets the samples of ParamsImageGeneration.
+func (p ParamsImageGeneration) SetSamples(samples int) ParamsImageGeneration {
+	p["samples"] = samples
+	return p
+}
+
+// SetReturnType sets the return type of ParamsImageGeneration.
+func (p ParamsImageGeneration) SetReturnType(returnType ImageReturnType) ParamsImageGeneration {
+	p["return_type"] = returnType
+	return p
+}
+
+// SetPriorNumInferenceSteps sets the prior num inference steps of ParamsImageGeneration.
+func (p ParamsImageGeneration) SetPriorNumInferenceSteps(steps int) ParamsImageGeneration {
+	p["prior_num_inference_steps"] = steps
+	return p
+}
+
+// SetPriorGuidanceScale sets the prior guidance scale of ParamsImageGeneration.
+func (p ParamsImageGeneration) SetPriorGuidanceScale(scale float64) ParamsImageGeneration {
+	p["prior_guidance_scale"] = scale
+	return p
+}
+
+// SetNumInferenceSteps sets the num inference steps of ParamsImageGeneration.
+func (p ParamsImageGeneration) SetNumInferenceSteps(steps int) ParamsImageGeneration {
+	p["num_inference_steps"] = steps
+	return p
+}
+
+// SetGuidanceScale sets the guidance scale of ParamsImageGeneration.
+func (p ParamsImageGeneration) SetGuidanceScale(scale float64) ParamsImageGeneration {
+	p["guidance_scale"] = scale
+	return p
+}
+
+// SetScheduler sets the scheduler of ParamsImageGeneration.
+func (p ParamsImageGeneration) SetScheduler(scheduler ImageDecodeScheduler) ParamsImageGeneration {
+	p["scheduler"] = scheduler
+	return p
+}
+
+// SetSeed sets the seed of ParamsImageGeneration.
+func (p ParamsImageGeneration) SetSeed(seed []int) ParamsImageGeneration {
+	p["seed"] = seed
+	return p
+}
+
+// SetNSFWChecker sets the NSFW checker of ParamsImageGeneration.
+func (p ParamsImageGeneration) SetNSFWChecker(nsfwChecker bool) ParamsImageGeneration {
+	p["nsfw_checker"] = nsfwChecker
+	return p
+}
+
+// ResponseGeneratedImages is the struct for generated images
+type ResponseGeneratedImages struct {
+	ID           string `json:"id"`
+	ModelVersion string `json:"model_version"`
+	Images       []struct {
+		ID                  string   `json:"id"`
+		Seed                int64    `json:"seed"`
+		Image               string   `json:"image"`
+		NSFWContentDetected bool     `json:"nsfw_content_detected,omitempty"`
+		NSFWScore           *float64 `json:"nsfw_score,omitempty"`
+	} `json:"images"`
 }

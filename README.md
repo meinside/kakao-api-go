@@ -36,22 +36,22 @@ See the [samples here](https://github.com/meinside/kakao-api-go/tree/master/samp
 ## API coverages
 
 - [ ] [KakaoLogin](https://developers.kakao.com/docs/latest/ko/kakaologin/rest-api)
-- [ ] [UserManagement](https://developers.kakao.com/docs/latest/ko/user-mgmt/rest-api)
-- [ ] [Message](https://developers.kakao.com/docs/latest/ko/message/rest-api)
-- [ ] [KakaoStory](https://developers.kakao.com/docs/latest/ko/kakaostory/rest-api)
-- [ ] [KakaoTalkChannel](https://developers.kakao.com/docs/latest/ko/kakaotalk-channel/common)
 - [ ] [KakaoSync](https://developers.kakao.com/docs/latest/ko/kakaosync/common)
-- [ ] [KakaoPay](https://developers.kakao.com/docs/latest/ko/kakaopay/common)
-- [ ] [KakaoMoment](https://developers.kakao.com/docs/latest/ko/kakaomoment/common)
+- [ ] [Message](https://developers.kakao.com/docs/latest/ko/message/rest-api)
+- [ ] [KakaotalkSocial](https://developers.kakao.com/docs/latest/ko/kakaotalk-social/common)
+- [ ] [KakaotalkChannel](https://developers.kakao.com/docs/latest/ko/kakaotalk-channel/common)
+- [ ] [KakaoStory](https://developers.kakao.com/docs/latest/ko/kakaostory/rest-api)
 - [ ] [PushNotification](https://developers.kakao.com/docs/latest/ko/push/rest-api)
-- [ ] [DaumSearch](https://developers.kakao.com/docs/latest/ko/daum-search/dev-guide)
+- [ ] [TalkCalendar](https://developers.kakao.com/docs/latest/ko/talkcalendar/common)
 - [ ] [Map](https://developers.kakao.com/docs/latest/ko/kakaomap/common)
 - [ ] [Local](https://developers.kakao.com/docs/latest/ko/local/dev-guide)
 - [ ] [KakaoNavi](https://developers.kakao.com/docs/latest/ko/kakaonavi/common)
-- [X] [Vision](https://developers.kakao.com/docs/latest/ko/vision/dev-guide), last update: 2020.08.
-- [X] [Pose](https://developers.kakao.com/docs/latest/ko/pose/dev-guide), last update: 2020.06.
-- [X] [Translation](https://developers.kakao.com/docs/latest/ko/translate/dev-guide), last update: 2020.08.
-- [X] [Speech](https://developers.kakao.com/docs/latest/ko/voice/rest-api), last update: 2020.06.
+- [ ] [DaumSearch](https://developers.kakao.com/docs/latest/ko/daum-search/dev-guide)
+- [X] [KoGPT](https://developers.kakao.com/docs/latest/ko/kogpt/common)
+- [X] [Karlo](https://developers.kakao.com/docs/latest/ko/karlo/common)
+- [ ] [KakaoMoment](https://developers.kakao.com/docs/latest/ko/kakaomoment/common)
+- [ ] [KeywordAd](https://developers.kakao.com/docs/latest/ko/keyword-ad/common)
+- [ ] [KakaoPay](https://developers.kakao.com/docs/latest/ko/kakaopay/common)
 
 ## License
 
