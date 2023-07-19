@@ -50,14 +50,15 @@ func TestKarlo(t *testing.T) {
 		t.Errorf("environment variable `KAKAO_API_KEY` is needed")
 	}
 
-	params := NewParamsImageGeneration("A cat with white fur").
+	// generation
+	paramsGeneration := NewParamsImageGeneration("A cat with white fur").
 		SetNegativePrompt("sleeping cat, dog, human, ugly face, cropped").
 		SetImageFormat(ImageFormatJPEG).
 		SetReturnType(ImageReturnURL).
 		SetNSFWChecker(true).
 		SetSamples(2)
 
-	if generated, err := client.GenerateImages(params); err != nil {
+	if generated, err := client.GenerateImages(paramsGeneration); err != nil {
 		t.Errorf("failed to generate images: %s", err)
 	} else {
 		if len(generated.Images) != 2 {
@@ -66,6 +67,45 @@ func TestKarlo(t *testing.T) {
 
 		if _verbose {
 			log.Printf("generated images = %+v", generated)
+		}
+	}
+
+	imageBytes, err := os.ReadFile("./sample/image.jpg")
+	if err != nil {
+		t.Fatalf("failed to read sample image file: %s", err)
+	}
+	image := EncodeBase64(imageBytes)
+
+	// upscale
+	paramsUpscale := NewParamsImageUpscale([]string{image}).
+		SetImageFormat(ImageFormatPNG).
+		SetReturnType(ImageReturnURL)
+	if scaledUp, err := client.UpscaleImages(paramsUpscale); err != nil {
+		t.Errorf("failed to upscale image: %s", err)
+	} else {
+		if _verbose {
+			log.Printf("upscaled images = %+v", scaledUp)
+		}
+	}
+
+	// variation
+	paramsVariation := NewParamsImageVariation(image, "make it looking modern, futuristic, and avant-garde").
+		SetImageFormat(ImageFormatPNG).
+		SetReturnType(ImageReturnURL)
+	if varied, err := client.VaryImage(paramsVariation); err != nil {
+		t.Errorf("failed to vary image: %s", err)
+	} else {
+		if _verbose {
+			log.Printf("varied images = %+v", varied)
+		}
+	}
+
+	// check NSFW
+	if nsfw, err := client.CheckNSFW([]string{image}); err != nil {
+		t.Errorf("failed to check NSFW: %s", err)
+	} else {
+		if _verbose {
+			log.Printf("NSFW result = %+v", nsfw)
 		}
 	}
 }
